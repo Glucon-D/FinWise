@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FiMail, FiLock, FiUser, FiAlertCircle, FiCheck } from "react-icons/fi";
+import {
+  FiMail,
+  FiLock,
+  FiUser,
+  FiAlertCircle,
+  FiCheck,
+  FiEyeOff,
+} from "react-icons/fi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Signup() {

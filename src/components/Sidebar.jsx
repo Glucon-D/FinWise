@@ -10,8 +10,10 @@ import {
   FiMenu,
   FiX,
   FiTarget,
-  FiTrendingUp
+  FiTrendingUp,
 } from 'react-icons/fi'
+
+import { IoIosCalculator } from "react-icons/io";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,11 +40,17 @@ export default function Sidebar() {
       description: 'Update investment goals'
     },
     { 
+      path: '/calculator', 
+      icon: <IoIosCalculator className="w-5 h-5"/>, 
+      label: 'Calculator',
+      description: 'Calculate returns'
+    }, 
+    { 
       path: '/settings', 
       icon: <FiSettings className="w-5 h-5" />, 
       label: 'Settings',
       description: 'Manage your account'
-    }
+    }, 
   ]
 
   const isActivePath = (path) => location.pathname === path

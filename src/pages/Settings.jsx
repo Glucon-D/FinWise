@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProfile } from '../context/ProfileContext'
-import { FiLogOut, FiShield, FiInfo, FiBell, FiUser } from 'react-icons/fi'
+import { FiLogOut, FiShield, FiBell, FiUser, FiLoader } from 'react-icons/fi'
 import Toast from '../components/Toast'
+import { formatToRupees } from '../utils/formatters'
 
 export default function Settings() {
   const { logout } = useAuth()
-  const { profile } = useProfile()
+  const { profile, loading } = useProfile()
   const navigate = useNavigate()
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
@@ -18,14 +19,17 @@ export default function Settings() {
     news: true
   })
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/login')
   }
 
-  const handlePrivacyClick = () => {
-    setToastMessage('Privacy policy would open in a real application')
-    setShowToast(true)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <FiLoader className="w-8 h-8 text-emerald-500 animate-spin" />
+      </div>
+    )
   }
 
   const settingsSections = [
@@ -39,13 +43,27 @@ export default function Settings() {
             <div className="bg-emerald-50 rounded-lg p-4">
               <p className="text-sm text-gray-600 mb-1">Risk Profile</p>
               <p className="text-lg font-semibold text-emerald-600">
-                {profile?.riskType?.charAt(0).toUpperCase() + profile?.riskType?.slice(1) || 'Not Set'}
+                {profile?.riskAppetite || 'Not Set'}
               </p>
             </div>
             <div className="bg-blue-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-1">Investment Period</p>
+              <p className="text-sm text-gray-600 mb-1">Monthly Investment</p>
               <p className="text-lg font-semibold text-blue-600">
-                {profile?.investmentPeriod || '0'} Years
+                {profile ? formatToRupees(profile.capital) : '₹0'}
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-purple-50 rounded-lg p-4">
+              <p className="text-sm text-gray-600 mb-1">Goal</p>
+              <p className="text-lg font-semibold text-purple-600">
+                {profile?.goal || 'Not Set'}
+              </p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <p className="text-sm text-gray-600 mb-1">Timeline</p>
+              <p className="text-lg font-semibold text-yellow-600">
+                {profile ? `${profile.goalYears} Years` : 'Not Set'}
               </p>
             </div>
           </div>
