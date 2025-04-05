@@ -27,28 +27,29 @@ function App() {
         <Navbar />
       </div>
 
-      <div className="flex-grow flex mt-16 mb-16">
-        {showSidebar && <Sidebar />}
-        <main 
-          id="main-content" 
-          className={`flex-grow px-4 py-8 overflow-y-auto ${showSidebar ? 'lg:pl-72' : ''}`}
-          role="main"
-          aria-live="polite"
-        >
-          <div className="container mx-auto">
-            {isLoading ? (
-              <div role="status" aria-label="Loading content">
-                <LoadingSpinner />
-              </div>
-            ) : (
-              <Outlet />
-            )}
-          </div>
-        </main>
-      </div>
-
-      <div className="fixed bottom-0 w-full z-50 bg-white">
-        <Footer />
+      <div className="flex-grow flex flex-col mt-16">
+        <div className="flex flex-grow">
+          {showSidebar && <Sidebar />}
+          <main 
+            id="main-content" 
+            className={`flex-grow px-4 py-8 ${showSidebar ? 'lg:pl-72' : ''}`}
+            role="main"
+            aria-live="polite"
+          >
+            <div className="container mx-auto">
+              {isLoading ? (
+                <div role="status" aria-label="Loading content">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <Outlet />
+              )}
+            </div>
+          </main>
+        </div>
+        <div className={`${showSidebar ? 'lg:ml-72' : ''}`}>
+          <Footer />
+        </div>
       </div>
     </div>
   )
