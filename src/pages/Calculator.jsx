@@ -1,51 +1,51 @@
-// src/pages/Calculator.jsx
-import React from 'react';
-import CalculatorCard from '../components/CalculatorCard';
-import SIPLogo from '/home/raghav/Desktop/FinWise/FinWise/src/assets/SIP.png';
-import FDLogo from '/home/raghav/Desktop/FinWise/FinWise/src/assets/FD.png'
-import EMILogo from '/home/raghav/Desktop/FinWise/FinWise/src/assets/EMI.png'
-import SWPLogo from '/home/raghav/Desktop/FinWise/FinWise/src/assets/SWP.png'
-import MFLogo from '/home/raghav/Desktop/FinWise/FinWise/src/assets/MF.png'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import CalculatorCard from "../components/CalculatorCard";
 
+import SIPLogo from "../assets/SIP.png";
+import FDLogo from "../assets/FD.png";
+import EMILogo from "../assets/EMI.png";
+import SWPLogo from "../assets/SWP.png";
+import MFLogo from "../assets/MF.png";
 
-
-// You can use your actual image URLs or local assets
 const calculators = [
   {
-    title: 'SIP',
-    description: 'Calculate how much you will accumulate with your SIP',
+    title: "SIP",
+    description: "Calculate how much you will accumulate with your SIP",
     image: SIPLogo,
-    route: '/SipCalculator'
+    route: "/calculator/sip", // ✅ full path
   },
   {
-    title: 'FD',
-    description: 'Check returns on your fixed deposits (FDs) without any hassle',
+    title: "FD",
+    description: "Check returns on your fixed deposits (FDs)",
     image: FDLogo,
-    route: '/FDCalculator'
+    route: "/calculator/fd",
   },
   {
-    title: 'EMI',
-    description: 'Calculate EMI on your loans - home loan, car loan or personal loan',
+    title: "EMI",
+    description: "Calculate EMI for home/car/personal loans",
     image: EMILogo,
-    route: '/EMICalculator'
+    route: "/calculator/emi",
   },
   {
-    title: 'SWP',
-    description: 'Calculate your final amount with Systematic Withdrawal Plans(SWP)',
+    title: "SWP",
+    description: "Calculate your withdrawals with SWP",
     image: SWPLogo,
-    route: '/SWPCalculator'
+    route: "/calculator/swp",
   },
   {
-    title: 'MF',
-    description: 'Calculate the returns on your mutual fund investments',
+    title: "MF",
+    description: "Calculate mutual fund returns",
     image: MFLogo,
-    route: '/MFCalculator'
+    route: "/calculator/mf",
   },
 ];
 
 export const Calculator = () => {
+  const navigate = useNavigate();
+
   const handleNavigation = (route) => {
-    window.location.href = route; // or use navigate() if using react-router
+    navigate(route); // ✅ client-side navigation
   };
 
   return (
@@ -65,5 +65,3 @@ export const Calculator = () => {
     </div>
   );
 };
-
-

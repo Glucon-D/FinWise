@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FiMail, FiLock, FiAlertCircle, FiCheck } from "react-icons/fi";
+import {
+  FiMail,
+  FiLock,
+  FiAlertCircle,
+  FiCheck,
+  FiEyeOff,
+} from "react-icons/fi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
