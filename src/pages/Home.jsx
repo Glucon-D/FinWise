@@ -18,6 +18,7 @@ import {
 } from "react-icons/fi";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import CountUp from "../utils/CountUp";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -101,11 +102,11 @@ export default function Home() {
       ease: "easeInOut",
     },
   };
-  
+
   // Handle automatic testimonial rotation
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => 
+      setCurrentTestimonial((prev) =>
         prev === testimonials.length - 1 ? 0 : prev + 1
       );
     }, 5000);
@@ -115,9 +116,10 @@ export default function Home() {
   // Add this meta viewport effect to ensure proper mobile scaling
   useEffect(() => {
     // Ensure the viewport is properly set for mobile devices
-    const viewport = document.querySelector('meta[name=viewport]');
+    const viewport = document.querySelector("meta[name=viewport]");
     if (viewport) {
-      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
+      viewport.content =
+        "width=device-width, initial-scale=1.0, maximum-scale=1.0";
     }
   }, []);
 
@@ -180,10 +182,10 @@ export default function Home() {
             scale: [1, 1.2, 1],
             opacity: [0.4, 0.6, 0.4],
           }}
-          transition={{ 
-            duration: 6, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
           }}
         />
         <motion.div
@@ -192,14 +194,14 @@ export default function Home() {
             scale: [1, 1.3, 1],
             opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ 
-            duration: 7, 
-            repeat: Infinity, 
+          transition={{
+            duration: 7,
+            repeat: Infinity,
             ease: "easeInOut",
-            delay: 1 
+            delay: 1,
           }}
         />
-        
+
         <motion.div
           className="text-center py-10 sm:py-16 md:py-24 relative"
           initial="hidden"
@@ -220,9 +222,9 @@ export default function Home() {
           <motion.h1
             className="font-bold text-gray-800 mb-3 sm:mb-7 px-4"
             variants={fadeInUp}
-            style={{ 
+            style={{
               fontSize: "min(max(2rem, 7vw), 4.5rem)",
-              lineHeight: 1.1 
+              lineHeight: 1.1,
             }}
           >
             Smart Investing,{" "}
@@ -231,9 +233,9 @@ export default function Home() {
           <motion.p
             className="text-gray-600 mb-6 sm:mb-10 max-w-4xl mx-auto px-4"
             variants={fadeInUp}
-            style={{ 
+            style={{
               fontSize: "min(max(1.125rem, 4vw), 1.875rem)",
-              lineHeight: 1.3
+              lineHeight: 1.3,
             }}
           >
             Get personalized investment recommendations powered by AI. Start
@@ -244,8 +246,9 @@ export default function Home() {
               to="/signup"
               className="inline-block font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               style={{
-                padding: "min(max(0.75rem, 3vw), 1.25rem) min(max(1.5rem, 4vw), 2.5rem)",
-                fontSize: "min(max(1rem, 3vw), 1.25rem)"
+                padding:
+                  "min(max(0.75rem, 3vw), 1.25rem) min(max(1.5rem, 4vw), 2.5rem)",
+                fontSize: "min(max(1rem, 3vw), 1.25rem)",
               }}
             >
               Get Started - It's Free
@@ -263,10 +266,20 @@ export default function Home() {
         viewport={{ once: true }}
       >
         {[
-          { label: "Active Users", value: "25K+", icon: FiUsers },
-          { label: "Assets Managed", value: "$320M+", icon: FiBarChart2 },
-          { label: "Success Rate", value: "94%", icon: FiTarget },
-          { label: "Client Satisfaction", value: "4.9/5", icon: FiShield },
+          { label: "Active Users", value: "25", icon: FiUsers, suffix: "K+" },
+          {
+            label: "Assets Managed",
+            value: "$320",
+            icon: FiBarChart2,
+            suffix: "M+",
+          },
+          { label: "Success Rate", value: "94", icon: FiTarget, suffix: "%" },
+          {
+            label: "Client Satisfaction",
+            value: "4.9",
+            icon: FiShield,
+            suffix: "/5",
+          },
         ].map((stat, index) => (
           <motion.div
             key={index}
@@ -276,21 +289,34 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
           >
-            <div className="mx-auto mb-2 sm:mb-4 rounded-full bg-emerald-100 flex items-center justify-center"
-                 style={{ 
-                   width: "min(max(3.5rem, 10vw), 4rem)",
-                   height: "min(max(3.5rem, 10vw), 4rem)"
-                 }}>
+            <div
+              className="mx-auto mb-2 sm:mb-4 rounded-full bg-emerald-100 flex items-center justify-center"
+              style={{
+                width: "min(max(3.5rem, 10vw), 4rem)",
+                height: "min(max(3.5rem, 10vw), 4rem)",
+              }}
+            >
               {createElement(stat.icon, {
-                style: { 
+                style: {
                   width: "min(max(1.75rem, 5vw), 2rem)",
-                  height: "min(max(1.75rem, 5vw), 2rem)"
+                  height: "min(max(1.75rem, 5vw), 2rem)",
                 },
                 className: "text-emerald-500",
               })}
             </div>
-            <h3 className="font-bold text-gray-800" style={{ fontSize: "min(max(1.25rem, 5vw), 1.875rem)" }}>{stat.value}</h3>
-            <p className="text-gray-600" style={{ fontSize: "min(max(0.75rem, 3vw), 1rem)" }}>{stat.label}</p>
+            <h3
+              className="font-bold text-gray-800"
+              style={{ fontSize: "min(max(1.25rem, 5vw), 1.875rem)" }}
+            >
+              <CountUp to={25} suffix={stat.suffix} />
+            </h3>
+
+            <p
+              className="text-gray-600"
+              style={{ fontSize: "min(max(0.75rem, 3vw), 1rem)" }}
+            >
+              {stat.label}
+            </p>
           </motion.div>
         ))}
       </motion.div>
@@ -307,18 +333,21 @@ export default function Home() {
           {
             icon: FiTarget,
             title: "Personalized Strategy",
-            description: "Get investment recommendations tailored to your goals, risk tolerance, and timeline."
+            description:
+              "Get investment recommendations tailored to your goals, risk tolerance, and timeline.",
           },
           {
             icon: FiShield,
             title: "Risk Management",
-            description: "Understand and manage your investment risks with our smart risk assessment system."
+            description:
+              "Understand and manage your investment risks with our smart risk assessment system.",
           },
           {
             icon: FiTrendingUp,
             title: "Growth Focused",
-            description: "Access curated investment funds designed to help you achieve your financial goals."
-          }
+            description:
+              "Access curated investment funds designed to help you achieve your financial goals.",
+          },
         ].map((feature, index) => (
           <motion.div
             key={index}
@@ -326,25 +355,31 @@ export default function Home() {
             variants={fadeInUp}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-5 rounded-full bg-emerald-100 flex items-center justify-center"
-                 style={{ 
-                   width: "min(max(4rem, 12vw), 5rem)",
-                   height: "min(max(4rem, 12vw), 5rem)"
-                 }}>
-              {createElement(feature.icon, { 
+            <div
+              className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-5 rounded-full bg-emerald-100 flex items-center justify-center"
+              style={{
+                width: "min(max(4rem, 12vw), 5rem)",
+                height: "min(max(4rem, 12vw), 5rem)",
+              }}
+            >
+              {createElement(feature.icon, {
                 className: "text-emerald-500",
-                style: { 
+                style: {
                   width: "min(max(2rem, 6vw), 2.5rem)",
-                  height: "min(max(2rem, 6vw), 2.5rem)"
-                }
+                  height: "min(max(2rem, 6vw), 2.5rem)",
+                },
               })}
             </div>
-            <h3 className="text-lg sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-3"
-                style={{ fontSize: "min(max(1.25rem, 4vw), 1.5rem)" }}>
+            <h3
+              className="text-lg sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-3"
+              style={{ fontSize: "min(max(1.25rem, 4vw), 1.5rem)" }}
+            >
               {feature.title}
             </h3>
-            <p className="text-sm sm:text-lg text-gray-600"
-               style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}>
+            <p
+              className="text-sm sm:text-lg text-gray-600"
+              style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}
+            >
               {feature.description}
             </p>
           </motion.div>
@@ -394,8 +429,9 @@ export default function Home() {
                 to="/signup"
                 className="text-white font-medium bg-emerald-500 rounded-lg hover:bg-emerald-400 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
                 style={{
-                  padding: "min(max(0.75rem, 2vw), 1rem) min(max(1.5rem, 3vw), 2.5rem)",
-                  fontSize: "min(max(1rem, 3vw), 1.125rem)"
+                  padding:
+                    "min(max(0.75rem, 2vw), 1rem) min(max(1.5rem, 3vw), 2.5rem)",
+                  fontSize: "min(max(1rem, 3vw), 1.125rem)",
                 }}
               >
                 Start Investing Now
@@ -404,8 +440,9 @@ export default function Home() {
                 to="/demo"
                 className="font-medium bg-white text-emerald-500 border-2 border-emerald-500 rounded-lg hover:bg-emerald-50 transition-all shadow-sm"
                 style={{
-                  padding: "min(max(0.75rem, 2vw), 1rem) min(max(1.5rem, 3vw), 2.5rem)",
-                  fontSize: "min(max(1rem, 3vw), 1.125rem)"
+                  padding:
+                    "min(max(0.75rem, 2vw), 1rem) min(max(1.5rem, 3vw), 2.5rem)",
+                  fontSize: "min(max(1rem, 3vw), 1.125rem)",
                 }}
               >
                 See How It Works
@@ -427,8 +464,13 @@ export default function Home() {
                     <FiUsers className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-500" />
                   </div>
                   <div className="text-left">
-                    <h4 className="text-base sm:text-xl font-semibold">25,000+</h4>
-                    <p className="text-sm sm:text-base text-gray-500">Active Investors</p>
+                    <h4 className="text-base sm:text-xl font-semibold">
+                      <CountUp to={25000} suffix="+" />
+                    </h4>
+
+                    <p className="text-sm sm:text-base text-gray-500">
+                      Active Investors
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 sm:gap-4">
@@ -436,8 +478,13 @@ export default function Home() {
                     <FiBarChart2 className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-500" />
                   </div>
                   <div className="text-left">
-                    <h4 className="text-base sm:text-xl font-semibold">$320M+</h4>
-                    <p className="text-sm sm:text-base text-gray-500">Assets Managed</p>
+                    <h4 className="text-base sm:text-xl font-semibold">
+                      <CountUp to={320} suffix="M+" />
+                    </h4>
+
+                    <p className="text-sm sm:text-base text-gray-500">
+                      Assets Managed
+                    </p>
                   </div>
                 </div>
               </div>
@@ -452,7 +499,7 @@ export default function Home() {
         className="py-10 sm:py-20 my-8 sm:my-16 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl sm:rounded-3xl relative overflow-hidden mx-2 sm:mx-0"
       >
         <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-        
+
         {/* Add animated background decoration */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(3)].map((_, i) => (
@@ -479,7 +526,7 @@ export default function Home() {
             />
           ))}
         </div>
-        
+
         <div className="relative">
           <motion.h2
             className="font-bold text-center text-gray-800 mb-8 sm:mb-14 px-4"
@@ -493,20 +540,28 @@ export default function Home() {
 
           <div className="relative w-full max-w-xs sm:max-w-xl md:max-w-4xl mx-auto px-2 sm:px-8">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <button 
-                onClick={() => setCurrentTestimonial(prev => (prev > 0 ? prev - 1 : testimonials.length - 1))}
+              <button
+                onClick={() =>
+                  setCurrentTestimonial((prev) =>
+                    prev > 0 ? prev - 1 : testimonials.length - 1
+                  )
+                }
                 className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
               >
                 <FiChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
               </button>
-              <button 
-                onClick={() => setCurrentTestimonial(prev => (prev < testimonials.length - 1 ? prev + 1 : 0))}
+              <button
+                onClick={() =>
+                  setCurrentTestimonial((prev) =>
+                    prev < testimonials.length - 1 ? prev + 1 : 0
+                  )
+                }
                 className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
               >
                 <FiChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
               </button>
             </div>
-            
+
             <motion.div
               className="flex items-center"
               animate={{ x: `-${currentTestimonial * 100}%` }}
@@ -530,7 +585,9 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm sm:text-lg text-gray-700 italic">{testimonial.text}</p>
+                    <p className="text-sm sm:text-lg text-gray-700 italic">
+                      {testimonial.text}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -575,46 +632,46 @@ export default function Home() {
             {
               question: "What is FunWise?",
               answer:
-                "FunWise is a smart, AI-powered platform that helps you choose the right investment options based on your age, goals, capital, and risk profile — all in a beginner-friendly and educational way."
+                "FunWise is a smart, AI-powered platform that helps you choose the right investment options based on your age, goals, capital, and risk profile — all in a beginner-friendly and educational way.",
             },
             {
               question: "Is this a real investment platform?",
               answer:
-                "No. FunWise is not a broker or a financial transaction platform. It's an educational and guidance tool that helps you understand what kind of investments may suit you."
+                "No. FunWise is not a broker or a financial transaction platform. It's an educational and guidance tool that helps you understand what kind of investments may suit you.",
             },
             {
               question: "Do I need any financial knowledge to use FunWise?",
               answer:
-                "Not at all! FunWise is designed for complete beginners. It explains everything in simple terms, and even has a mode called \"Explain Like I'm 18\" for ultra-clear explanations."
+                'Not at all! FunWise is designed for complete beginners. It explains everything in simple terms, and even has a mode called "Explain Like I\'m 18" for ultra-clear explanations.',
             },
             {
               question: "How does FunWise give suggestions?",
               answer:
-                "FunWise uses AI (Gemini) to understand your profile (like age, goal, capital, etc.) and gives you personalized investment suggestions like SIPs, mutual funds, or gold — based on your risk category."
+                "FunWise uses AI (Gemini) to understand your profile (like age, goal, capital, etc.) and gives you personalized investment suggestions like SIPs, mutual funds, or gold — based on your risk category.",
             },
             {
               question: "Is my data safe?",
               answer:
-                "Yes. We only collect basic profile info like age, capital, and goals. We don't store any sensitive or financial data, and everything stays private and secure."
+                "Yes. We only collect basic profile info like age, capital, and goals. We don't store any sensitive or financial data, and everything stays private and secure.",
             },
             {
               question: "Do I need to pay to use FunWise?",
               answer:
-                "Nope! FunWise MVP is completely free to use. It's designed for learning and exploring how to invest smartly."
+                "Nope! FunWise MVP is completely free to use. It's designed for learning and exploring how to invest smartly.",
             },
             {
               question: "Does FunWise tell me exactly where to invest?",
               answer:
-                "FunWise gives AI-based suggestions, not fixed advice. You still make your own decisions — we just help you understand your options better."
+                "FunWise gives AI-based suggestions, not fixed advice. You still make your own decisions — we just help you understand your options better.",
             },
             {
               question: "What's coming next on FunWise?",
-              answer: 
+              answer:
                 "In future updates, we'll add: \
                 \n• A smart portfolio simulator \
                 \n• AI-powered financial chatbot \
                 \n• Easy-to-read blogs \
-                \n• Goal tracking and more!"
+                \n• Goal tracking and more!",
             },
           ].map((faq, index) => (
             <motion.div
@@ -629,7 +686,10 @@ export default function Home() {
                 className="flex justify-between items-center w-full p-4 sm:p-6 text-left bg-white hover:bg-gray-50 transition-colors"
                 onClick={() => toggleFAQ(index)}
               >
-                <span className="font-medium text-gray-800 text-sm sm:text-lg" style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}>
+                <span
+                  className="font-medium text-gray-800 text-sm sm:text-lg"
+                  style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}
+                >
                   {faq.question}
                 </span>
                 <motion.div
@@ -649,7 +709,13 @@ export default function Home() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="p-4 sm:p-6 bg-gray-50 border-t border-gray-200">
-                  <p className="text-sm sm:text-lg text-gray-600" style={{ fontSize: "min(max(0.875rem, 2.5vw), 1.125rem)", whiteSpace: "pre-line" }}>
+                  <p
+                    className="text-sm sm:text-lg text-gray-600"
+                    style={{
+                      fontSize: "min(max(0.875rem, 2.5vw), 1.125rem)",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
                     {faq.answer}
                   </p>
                 </div>
@@ -667,7 +733,7 @@ export default function Home() {
         viewport={{ once: true }}
       >
         <div className="absolute inset-0 bg-pattern opacity-10" />
-        
+
         {/* Add animated dots */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(20)].map((_, i) => (
@@ -693,7 +759,7 @@ export default function Home() {
             />
           ))}
         </div>
-        
+
         <div className="relative px-4 sm:px-6">
           <motion.h2
             className="font-bold mb-3 sm:mb-6"
@@ -726,8 +792,9 @@ export default function Home() {
               to="/signup"
               className="font-medium bg-white text-emerald-500 rounded-lg hover:bg-gray-50 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
               style={{
-                padding: "min(max(0.75rem, 2vw), 1.25rem) min(max(1.5rem, 3vw), 2.5rem)",
-                fontSize: "min(max(1rem, 3vw), 1.125rem)"
+                padding:
+                  "min(max(0.75rem, 2vw), 1.25rem) min(max(1.5rem, 3vw), 2.5rem)",
+                fontSize: "min(max(1rem, 3vw), 1.125rem)",
               }}
             >
               Create Free Account
@@ -736,8 +803,9 @@ export default function Home() {
               to="/demo"
               className="font-medium bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all"
               style={{
-                padding: "min(max(0.75rem, 2vw), 1.25rem) min(max(1.5rem, 3vw), 2.5rem)",
-                fontSize: "min(max(1rem, 3vw), 1.125rem)"
+                padding:
+                  "min(max(0.75rem, 2vw), 1.25rem) min(max(1.5rem, 3vw), 2.5rem)",
+                fontSize: "min(max(1rem, 3vw), 1.125rem)",
               }}
             >
               Watch Demo
