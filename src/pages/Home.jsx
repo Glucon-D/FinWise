@@ -1,7 +1,8 @@
+import { createElement } from 'react'
 import { Link } from 'react-router-dom'
-import { FiTrendingUp, FiShield, FiTarget, FiChevronDown, FiUsers, FiBarChart2 } from 'react-icons/fi'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { FiTrendingUp, FiShield, FiTarget, FiChevronDown, FiUsers, FiBarChart2, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { motion, useAnimation, useInView } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -25,36 +26,117 @@ export default function Home() {
     }
   };
 
+  // New state for testimonials
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const testimonialsRef = useRef(null);
+  const isInView = useInView(testimonialsRef);
+  const controls = useAnimation();
+
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Small Business Owner",
+      image: "https://randomuser.me/api/portraits/women/1.jpg",
+      text: "FinWise transformed how I manage my business investments. The AI recommendations are spot-on!"
+    },
+    {
+      name: "Michael Chen",
+      role: "Software Engineer",
+      image: "https://randomuser.me/api/portraits/men/2.jpg",
+      text: "The platform's ease of use and intelligent insights helped me build a robust investment portfolio."
+    },
+    {
+      name: "Emma Davis",
+      role: "Freelance Designer",
+      image: "https://randomuser.me/api/portraits/women/3.jpg",
+      text: "As a creative professional, I appreciate how FinWise simplifies complex investment decisions."
+    }
+  ];
+
+  // Enhanced hero section with floating elements
+  const floatingAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4">
-      {/* Hero Section with Animation */}
-      <motion.div 
-        className="text-center py-16 md:py-24"
-        initial="hidden"
-        animate="visible"
-        variants={staggerContainer}
-      >
-        <motion.h1 
-          className="text-4xl md:text-6xl font-bold text-gray-800 mb-6"
-          variants={fadeInUp}
+      {/* Enhanced Hero Section */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-transparent to-teal-50 rounded-3xl" />
+        <motion.div 
+          className="text-center py-16 md:py-24 relative"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
         >
-          Smart Investing,{' '}
-          <span className="text-emerald-500">Made Simple</span>
-        </motion.h1>
-        <motion.p 
-          className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto"
-          variants={fadeInUp}
-        >
-          Get personalized investment recommendations powered by AI. Start your journey to financial freedom today.
-        </motion.p>
-        <motion.div variants={fadeInUp}>
-          <Link
-            to="/signup"
-            className="inline-block px-8 py-4 text-lg font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          {/* Add decorative elements */}
+          <motion.div 
+            className="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full blur-3xl opacity-60"
+            animate={floatingAnimation}
+          />
+          <motion.div 
+            className="absolute bottom-0 left-0 w-24 h-24 bg-teal-100 rounded-full blur-2xl opacity-60"
+            animate={floatingAnimation}
+          />
+          
+          {/* Existing hero content with enhanced styling */}
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold text-gray-800 mb-6"
+            variants={fadeInUp}
           >
-            Get Started - It's Free
-          </Link>
+            Smart Investing,{' '}
+            <span className="text-emerald-500">Made Simple</span>
+          </motion.h1>
+          <motion.p 
+            className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto"
+            variants={fadeInUp}
+          >
+            Get personalized investment recommendations powered by AI. Start your journey to financial freedom today.
+          </motion.p>
+          <motion.div variants={fadeInUp}>
+            <Link
+              to="/signup"
+              className="inline-block px-8 py-4 text-lg font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              Get Started - It's Free
+            </Link>
+          </motion.div>
         </motion.div>
+      </div>
+
+      {/* New Statistics Section */}
+      <motion.div 
+        className="grid grid-cols-2 md:grid-cols-4 gap-6 py-12 px-6 bg-white rounded-2xl shadow-lg -mt-8 relative z-10"
+        initial={{ y: 50, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+      >
+        {[
+          { label: "Active Users", value: "25K+", icon: FiUsers },
+          { label: "Assets Managed", value: "$320M+", icon: FiBarChart2 },
+          { label: "Success Rate", value: "94%", icon: FiTarget },
+          { label: "Client Satisfaction", value: "4.9/5", icon: FiShield }
+        ].map((stat, index) => (
+          <motion.div
+            key={index}
+            className="text-center p-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-emerald-100 flex items-center justify-center">
+              {createElement(stat.icon, { className: "w-6 h-6 text-emerald-500" })}
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800">{stat.value}</h3>
+            <p className="text-sm text-gray-600">{stat.label}</p>
+          </motion.div>
+        ))}
       </motion.div>
 
       {/* Features Grid with Animation */}
@@ -197,6 +279,63 @@ export default function Home() {
         </div>
       </motion.div>
 
+      {/* New Testimonials Section */}
+      <motion.div 
+        ref={testimonialsRef}
+        className="py-16 my-12 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+        <div className="relative">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            What Our Users Say
+          </motion.h2>
+          
+          <div className="relative max-w-3xl mx-auto px-8">
+            <motion.div
+              className="flex items-center"
+              animate={{ x: `-${currentTestimonial * 100}%` }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="w-full flex-shrink-0 px-4">
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <div className="flex items-center gap-4 mb-4">
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                      <div>
+                        <h4 className="font-semibold text-gray-800">{testimonial.name}</h4>
+                        <p className="text-sm text-gray-600">{testimonial.role}</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-700 italic">{testimonial.text}</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+            
+            <div className="flex justify-center gap-2 mt-6">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    currentTestimonial === index ? 'bg-emerald-500' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* FAQ Section */}
       <motion.div 
         className="py-16"
@@ -274,50 +413,53 @@ export default function Home() {
         </div>
       </motion.div>
 
-      {/* Final CTA Section */}
+      {/* Enhanced Final CTA Section */}
       <motion.div 
-        className="text-center py-16 border-t"
+        className="text-center py-16 my-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl text-white relative overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
       >
-        <motion.h2 
-          className="text-3xl font-bold text-gray-800 mb-4"
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          Ready to Start Your Investment Journey?
-        </motion.h2>
-        <motion.p 
-          className="text-gray-600 mb-8 max-w-xl mx-auto"
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-        >
-          Join thousands of smart investors who trust FinWise for their investment decisions. It only takes a few minutes to get started.
-        </motion.p>
-        <motion.div 
-          className="flex justify-center gap-4 flex-wrap"
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-        >
-          <Link
-            to="/login"
-            className="px-6 py-3 text-emerald-500 border-2 border-emerald-500 rounded-lg hover:bg-emerald-50 transition-all"
+        <div className="absolute inset-0 bg-pattern opacity-10" />
+        <div className="relative">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-4"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
           >
-            Sign In
-          </Link>
-          <Link
-            to="/signup"
-            className="px-6 py-3 text-white bg-emerald-500 rounded-lg hover:bg-emerald-400 transition-all shadow-md hover:shadow-lg"
+            Start Your Investment Journey Today
+          </motion.h2>
+          <motion.p 
+            className="text-xl opacity-90 mb-8 max-w-xl mx-auto"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
           >
-            Create Account
-          </Link>
-        </motion.div>
+            Join thousands of smart investors and take control of your financial future.
+          </motion.p>
+          <motion.div 
+            className="flex justify-center gap-4 flex-wrap"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
+            <Link
+              to="/signup"
+              className="px-8 py-3 bg-white text-emerald-500 rounded-lg hover:bg-gray-50 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
+            >
+              Create Free Account
+            </Link>
+            <Link
+              to="/demo"
+              className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all"
+            >
+              Watch Demo
+            </Link>
+          </motion.div>
+        </div>
       </motion.div>
     </div>
   )
