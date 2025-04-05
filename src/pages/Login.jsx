@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FiMail, FiLock, FiAlertCircle, FiCheck } from "react-icons/fi";
-import { FaEye, FiEyeOff } from "react-icons/fi";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -130,7 +130,7 @@ export default function Login() {
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500 hover:text-green-500 "
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? <FiEyeOff /> : <FaEye />}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </div>
             </div>
           </div>
