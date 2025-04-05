@@ -1,60 +1,65 @@
-import { useState, useRef, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { useProfile } from '../context/ProfileContext'
-import { 
-  FiUser, 
-  FiSettings, 
-  FiLogOut, 
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useProfile } from "../context/ProfileContext";
+import {
+  FiUser,
+  FiSettings,
+  FiLogOut,
   FiChevronDown,
-  FiPieChart
-} from 'react-icons/fi'
-import { motion } from 'framer-motion'
-import { GiCash } from 'react-icons/gi'
+  FiPieChart,
+} from "react-icons/fi";
+import { motion } from "framer-motion";
+import { GiCash } from "react-icons/gi";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const { isAuthenticated, user, logout, loading } = useAuth()
-  const { profile } = useProfile()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const dropdownRef = useRef(null)
-  
-  const showFullNav = location.pathname !== '/' && 
-                     location.pathname !== '/login' && 
-                     location.pathname !== '/signup'
+  const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, user, logout, loading } = useAuth();
+  const { profile } = useProfile();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  const showFullNav =
+    location.pathname !== "/" &&
+    location.pathname !== "/login" &&
+    location.pathname !== "/signup";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
+    await logout();
+    navigate("/login");
+  };
 
   // Get first initial for avatar
   const getInitial = () => {
     if (user && user.name) {
-      return user.name[0].toUpperCase()
+      return user.name[0].toUpperCase();
     }
     if (profile?.name) {
-      return profile.name[0].toUpperCase()
+      return profile.name[0].toUpperCase();
     }
-    return <FiUser />
-  }
+    return <FiUser />;
+  };
 
   return (
-    <nav className="bg-white border-b border-gray-100 w-full">
-      <div className={`px-4 ${showFullNav ? 'lg:pl-72' : ''}`}>
+    <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/20 bg-white/60 backdrop-blur-xl">
+      <div className={`px-4 ${showFullNav ? "lg:pl-72" : ""}`}>
         <div className="max-w-7xl mx-auto h-16 flex justify-between items-center">
-          <div className={`flex items-center ${showFullNav ? 'lg:fixed lg:left-6 z-50' : ''}`}>
+          <div
+            className={`flex items-center ${
+              showFullNav ? "lg:fixed lg:left-6 z-50" : ""
+            }`}
+          >
             <Link to="/" className="flex items-center gap-2">
               <motion.div
                 initial={{ rotate: 0 }}
@@ -69,12 +74,20 @@ export default function Navbar() {
               >
                 <GiCash className="text-2xl text-white" />
               </motion.div>
-              <span className="text-xl font-bold text-gray-800">FinWise</span>
+
+              <motion.span
+                className="text-xl text-gray-800"
+                initial={{ x: -15, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                FinWise
+              </motion.span>
             </Link>
           </div>
-          
+
           {showFullNav && <div className="w-36" />}
-          
+
           <div className="flex items-center ml-auto">
             {!loading && isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
@@ -86,20 +99,30 @@ export default function Navbar() {
                     {getInitial()}
                   </div>
                   <span className="hidden sm:block text-gray-700">
-                    {user?.name || profile?.name || 'User'}
+                    {user?.name || profile?.name || "User"}
                   </span>
-                  <FiChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  <FiChevronDown
+                    className={`transition-transform ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {isOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user?.name || profile?.name || 'User'}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {user?.name || profile?.name || "User"}
+                      </p>
                       <p className="text-xs text-gray-500 truncate">
-                        Risk: {profile?.riskProfile ? 
-                          profile.riskProfile.charAt(0).toUpperCase() + profile.riskProfile.slice(1) 
-                          : 'Loading...'}
+                        {user?.email}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        Risk:{" "}
+                        {profile?.riskProfile
+                          ? profile.riskProfile.charAt(0).toUpperCase() +
+                            profile.riskProfile.slice(1)
+                          : "Loading..."}
                       </p>
                     </div>
 
@@ -144,7 +167,7 @@ export default function Navbar() {
               </div>
             ) : !loading ? (
               <>
-                <Link 
+                <Link
                   to="/login"
                   className="flex items-center gap-2 text-gray-600 hover:text-emerald-500 transition-colors"
                 >
@@ -163,5 +186,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
