@@ -60,22 +60,37 @@ class DatabaseService {
       const capital = parseInt(profileData.monthlyInvestment || 0);
       const validCapital = Math.max(100, Math.min(capital, 10000000));
 
+      // Prepare update data
+      const updateData = {
+        age: parseInt(profileData.age),
+        capital: validCapital,
+        initialInvestment: parseInt(profileData.initialInvestment) || 0,
+        goal: profileData.investmentGoal,
+        goalYears: parseInt(profileData.investmentPeriod),
+        riskAppetite: profileData.riskTolerance,
+      };
+
+      // If AI has provided a risk profile, use it, otherwise use the mapping function
+      if (profileData.riskProfile) {
+        updateData.riskProfile = profileData.riskProfile;
+      } else {
+        updateData.riskProfile = this.mapRiskToleranceToProfile(
+          profileData.riskTolerance
+        );
+      }
+
+      // If AI has provided investment types, use them, otherwise use the generation function
+      if (profileData.investmentType && Array.isArray(profileData.investmentType)) {
+        updateData.investmentType = profileData.investmentType;
+      } else {
+        updateData.investmentType = this.getInvestmentTypes(profileData);
+      }
+
       const document = await databases.updateDocument(
         DATABASE_ID,
         USERS_COLLECTION_ID,
         documents[0].$id,
-        {
-          age: parseInt(profileData.age),
-          capital: validCapital,
-          initialInvestment: parseInt(profileData.initialInvestment) || 0, // <-- Add this line
-          goal: profileData.investmentGoal,
-          goalYears: parseInt(profileData.investmentPeriod),
-          riskAppetite: profileData.riskTolerance,
-          riskProfile: this.mapRiskToleranceToProfile(
-            profileData.riskTolerance
-          ),
-          investmentType: this.getInvestmentTypes(profileData),
-        }
+        updateData
       );
 
       return { success: true, data: document };
