@@ -1,51 +1,54 @@
-import { useEffect, useState } from 'react'
-import { useProfile } from '../context/ProfileContext'
-import { getFundsByRisk, mapRiskToleranceToProfile } from '../data/fundData'
-import FundCard from '../components/FundCard'
-import RiskTag from '../components/RiskTag'
-import { FiAlertCircle, FiLoader, FiInfo, FiX } from 'react-icons/fi'
-import { BiRupee } from 'react-icons/bi'
-import { formatToRupees } from '../utils/formatters'
-import { explainLike18 } from '../services/gemini'
+import { useEffect, useState } from "react";
+import { useProfile } from "../context/ProfileContext";
+import { getFundsByRisk, mapRiskToleranceToProfile } from "../data/fundData";
+import FundCard from "../components/FundCard";
+import RiskTag from "../components/RiskTag";
+import { FiAlertCircle, FiLoader, FiInfo, FiX } from "react-icons/fi";
+import { BiRupee } from "react-icons/bi";
+import { formatToRupees } from "../utils/formatters";
+import { explainLike18 } from "../services/gemini";
 
 export default function FundSuggestions() {
-  const { profile, loading } = useProfile()
-  const [recommendedFunds, setRecommendedFunds] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [explanation, setExplanation] = useState("")
-  const [explainedTerm, setExplainedTerm] = useState("")
-  const [explainLoading, setExplainLoading] = useState(false)
+  const { profile, loading } = useProfile();
+  const [recommendedFunds, setRecommendedFunds] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [explanation, setExplanation] = useState("");
+  const [explainedTerm, setExplainedTerm] = useState("");
+  const [explainLoading, setExplainLoading] = useState(false);
 
   const handleExplain = async (term) => {
-    setExplainLoading(true)
-    setExplainedTerm(term)
+    setExplainLoading(true);
+    setExplainedTerm(term);
     try {
-      const result = await explainLike18(term)
+      const result = await explainLike18(term);
       if (result.success) {
-        setExplanation(result.explanation)
+        setExplanation(result.explanation);
       } else {
-        setExplanation(`Sorry, I couldn't explain ${term} right now.`)
+        setExplanation(`Sorry, I couldn't explain ${term} right now.`);
       }
     } catch (error) {
-      console.error("Error getting explanation:", error)
-      setExplanation(`Sorry, I couldn't explain ${term} right now.`)
+      console.error("Error getting explanation:", error);
+      setExplanation(`Sorry, I couldn't explain ${term} right now.`);
     } finally {
-      setExplainLoading(false)
+      setExplainLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (profile) {
       try {
         // First, try to use AI-suggested risk profile if available
         let riskProfile;
-        
+
         if (profile.riskProfile) {
           // Convert AI-generated risk profile to match our system's risk profile format
           const aiRiskProfile = profile.riskProfile.toLowerCase().trim();
           if (aiRiskProfile === "conservative" || aiRiskProfile === "low") {
             riskProfile = "conservative";
-          } else if (aiRiskProfile === "aggressive" || aiRiskProfile === "high") {
+          } else if (
+            aiRiskProfile === "aggressive" ||
+            aiRiskProfile === "high"
+          ) {
             riskProfile = "aggressive";
           } else {
             riskProfile = "moderate";
@@ -54,41 +57,53 @@ export default function FundSuggestions() {
           // Fallback to using the risk appetite
           riskProfile = mapRiskToleranceToProfile(profile.riskAppetite);
         }
-        
+
         console.log("Using risk profile:", riskProfile);
         let funds = getFundsByRisk(riskProfile);
-        
+
         // If still no funds found, show some default funds
         if (funds.length === 0) {
-          console.log("No funds found for risk profile, using moderate as fallback");
+          console.log(
+            "No funds found for risk profile, using moderate as fallback"
+          );
           funds = getFundsByRisk("moderate");
         }
-        
+
         // Filter funds by investment types if AI has provided them
-        if (profile.investmentType && profile.investmentType.length > 0 && funds.length > 0) {
+        if (
+          profile.investmentType &&
+          profile.investmentType.length > 0 &&
+          funds.length > 0
+        ) {
           // Create a normalized array of investment types (lowercase for comparison)
-          const normalizedTypes = profile.investmentType.map(type => type.toLowerCase());
-          
+          const normalizedTypes = profile.investmentType.map((type) =>
+            type.toLowerCase()
+          );
+
           // Filter funds that match at least one of the investment types
-          const filteredFunds = funds.filter(fund => {
+          const filteredFunds = funds.filter((fund) => {
             // Safely check if fund.type exists before calling toLowerCase()
-            const fundType = fund.type || fund.category || '';
-            
+            const fundType = fund.type || fund.category || "";
+
             // Compare fund type (lowercase) with our normalized investment types
-            return normalizedTypes.some(type => {
-              return fundType.toLowerCase().includes(type.toLowerCase()) ||
-                     type.includes(fundType.toLowerCase());
+            return normalizedTypes.some((type) => {
+              return (
+                fundType.toLowerCase().includes(type.toLowerCase()) ||
+                type.includes(fundType.toLowerCase())
+              );
             });
           });
-          
+
           // Only use filtered funds if we found matches, otherwise keep all funds for the risk profile
           if (filteredFunds.length > 0) {
             funds = filteredFunds;
           } else {
-            console.log("No funds match investment types, showing all funds for risk profile");
+            console.log(
+              "No funds match investment types, showing all funds for risk profile"
+            );
           }
         }
-        
+
         console.log("Final filtered funds:", funds);
         setRecommendedFunds(funds);
       } catch (error) {
@@ -99,44 +114,48 @@ export default function FundSuggestions() {
     } else {
       setIsLoading(false);
     }
-  }, [profile])
+  }, [profile]);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <FiLoader className="w-8 h-8 text-emerald-500 animate-spin" />
       </div>
-    )
+    );
   }
 
   if (!profile) {
     return (
       <div className="text-center py-12">
         <FiAlertCircle className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Required</h2>
-        <p className="text-gray-600">Please complete your investment profile first.</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Profile Required
+        </h2>
+        <p className="text-gray-600">
+          Please complete your investment profile first.
+        </p>
       </div>
-    )
+    );
   }
 
   // Calculate portfolio allocation based on risk appetite
   const getAllocation = () => {
     // Get normalized risk profile
-    const riskProfile = mapRiskToleranceToProfile(profile.riskAppetite)
-    
-    switch (riskProfile) {
-      case 'aggressive':
-        return { equity: 75, debt: 15, gold: 10 }
-      case 'moderate':
-        return { equity: 60, debt: 30, gold: 10 }
-      case 'conservative':
-        return { equity: 40, debt: 50, gold: 10 }
-      default:
-        return { equity: 60, debt: 30, gold: 10 }
-    }
-  }
+    const riskProfile = mapRiskToleranceToProfile(profile.riskAppetite);
 
-  const allocation = getAllocation()
+    switch (riskProfile) {
+      case "aggressive":
+        return { equity: 75, debt: 15, gold: 10 };
+      case "moderate":
+        return { equity: 60, debt: 30, gold: 10 };
+      case "conservative":
+        return { equity: 40, debt: 50, gold: 10 };
+      default:
+        return { equity: 60, debt: 30, gold: 10 };
+    }
+  };
+
+  const allocation = getAllocation();
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -149,11 +168,12 @@ export default function FundSuggestions() {
           <div className="flex items-center justify-center gap-2">
             <RiskTag risk={profile.riskAppetite} />
             <button
-              onClick={() => handleExplain(profile.riskProfile || "Investment Risk Profile")}
+              onClick={() =>
+                handleExplain(profile.riskProfile || "Investment Risk Profile")
+              }
               className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded flex items-center"
             >
               🧠 Explain
-
             </button>
           </div>
         </div>
@@ -169,7 +189,6 @@ export default function FundSuggestions() {
                 className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
               >
                 🧠 Explain
-
               </button>
             </h2>
             {isLoading ? (
@@ -179,10 +198,10 @@ export default function FundSuggestions() {
               </div>
             ) : recommendedFunds.length > 0 ? (
               <div className="grid md:grid-cols-2 gap-6">
-                {recommendedFunds.map(fund => (
-                  <FundCard 
-                    key={fund.code} 
-                    fund={fund} 
+                {recommendedFunds.map((fund) => (
+                  <FundCard
+                    key={fund.code}
+                    fund={fund}
                     onExplain={handleExplain}
                   />
                 ))}
@@ -190,7 +209,10 @@ export default function FundSuggestions() {
             ) : (
               <div className="text-center py-8 bg-yellow-50 rounded-lg">
                 <FiAlertCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                <p className="text-gray-700">No funds match your AI-generated risk profile. Please update your profile.</p>
+                <p className="text-gray-700">
+                  No funds match your AI-generated risk profile. Please update
+                  your profile.
+                </p>
               </div>
             )}
           </div>
@@ -198,7 +220,9 @@ export default function FundSuggestions() {
 
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Investment Summary</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Investment Summary
+            </h2>
             <div className="space-y-4">
               <div className="p-4 bg-emerald-50 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Monthly Investment</p>
@@ -231,7 +255,6 @@ export default function FundSuggestions() {
                 className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
               >
                 🧠 Explain
-
               </button>
             </h2>
             <div className="space-y-4">
@@ -244,15 +267,17 @@ export default function FundSuggestions() {
                       className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
                     >
                       🧠 Explain
-
                     </button>
                   </span>
                   <div className="flex items-center gap-4">
                     <div className="w-48 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className={`h-full ${
-                          type === 'equity' ? 'bg-emerald-500' : 
-                          type === 'debt' ? 'bg-blue-500' : 'bg-yellow-500'
+                          type === "equity"
+                            ? "bg-emerald-500"
+                            : type === "debt"
+                            ? "bg-blue-500"
+                            : "bg-yellow-500"
                         }`}
                         style={{ width: `${percentage}%` }}
                       />
@@ -273,7 +298,6 @@ export default function FundSuggestions() {
                   className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
                 >
                   🧠 Explain
-
                 </button>
               </h3>
               {profile.investmentType && profile.investmentType.length > 0 ? (
@@ -294,7 +318,9 @@ export default function FundSuggestions() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Update your profile to get AI-powered investment strategies</p>
+                <p className="text-sm text-gray-500">
+                  Update your profile to get AI-powered investment strategies
+                </p>
               )}
             </div>
           </div>
@@ -303,7 +329,7 @@ export default function FundSuggestions() {
 
       {/* Explanation Modal */}
       {explanation && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xl flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
             <button
               onClick={() => setExplanation("")}

@@ -102,11 +102,12 @@ export default function Dashboard() {
         <div className="flex items-center gap-2">
           <RiskTag risk={profile.riskAppetite} />
           <button
-            onClick={() => handleExplain(profile.riskProfile || "Investment Risk Profile")}
+            onClick={() =>
+              handleExplain(profile.riskProfile || "Investment Risk Profile")
+            }
             className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded flex items-center"
           >
             🧠 Explain
-
           </button>
         </div>
       ),
@@ -221,8 +222,9 @@ export default function Dashboard() {
           </h2>
           <div className="space-y-4">
             <p className="text-gray-600 mb-4">
-              Based on your {profile.riskProfile || getRiskDisplayText(profile.riskAppetite)} risk
-              profile, we recommend:
+              Based on your{" "}
+              {profile.riskProfile || getRiskDisplayText(profile.riskAppetite)}{" "}
+              risk profile, we recommend:
             </p>
             <div className="space-y-4">
               {Object.entries(allocation).map(([type, percentage]) => (
@@ -234,7 +236,6 @@ export default function Dashboard() {
                       className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
                     >
                       🧠 Explain
-
                     </button>
                   </span>
                   <div className="flex items-center gap-4">
@@ -267,7 +268,6 @@ export default function Dashboard() {
                     className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
                   >
                     🧠 Explain
-
                   </button>
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -302,7 +302,7 @@ export default function Dashboard() {
 
       {/* Explanation Modal */}
       {explanation && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xl  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
             <button
               onClick={() => setExplanation("")}

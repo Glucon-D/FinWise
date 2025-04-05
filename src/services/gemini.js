@@ -17,12 +17,12 @@ export async function generateInvestmentSuggestion(userProfile) {
     const prompt = `
       As an AI investment advisor, analyze this investor profile and provide personalized recommendations:
       
-      Age: ${userProfile.age || 'N/A'}
-      Monthly Investment: ${userProfile.monthlyInvestment || 'N/A'}
-      Initial Investment: ${userProfile.initialInvestment || 'N/A'}
-      Investment Goal: ${userProfile.investmentGoal || 'N/A'}
-      Investment Period: ${userProfile.investmentPeriod || 'N/A'} years
-      Risk Tolerance: ${userProfile.riskTolerance || 'Moderate'}
+      Age: ${userProfile.age || "N/A"}
+      Monthly Investment: ${userProfile.monthlyInvestment || "N/A"}
+      Initial Investment: ${userProfile.initialInvestment || "N/A"}
+      Investment Goal: ${userProfile.investmentGoal || "N/A"}
+      Investment Period: ${userProfile.investmentPeriod || "N/A"} years
+      Risk Tolerance: ${userProfile.riskTolerance || "Moderate"}
       
       Based on this profile:
       1. Determine the most appropriate risk profile (choose exactly one from: "Conservative", "Moderate", or "Aggressive")
@@ -38,7 +38,7 @@ export async function generateInvestmentSuggestion(userProfile) {
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
-    
+
     // Extract the JSON object from the response text
     // Sometimes the API returns the JSON with extra text, so we need to parse it
     let jsonResponse;
@@ -54,10 +54,10 @@ export async function generateInvestmentSuggestion(userProfile) {
         throw new Error("Could not parse JSON from response");
       }
     }
-    
+
     return {
       success: true,
-      data: jsonResponse
+      data: jsonResponse,
     };
   } catch (error) {
     console.error("Error generating investment suggestion:", error);
@@ -67,8 +67,8 @@ export async function generateInvestmentSuggestion(userProfile) {
       // Fallback data in case of failure
       data: {
         riskProfile: "Moderate",
-        investmentType: ["SIP", "Mutual Funds", "Index Funds"]
-      }
+        investmentType: ["SIP", "Mutual Funds", "Index Funds"],
+      },
     };
   }
 }
@@ -80,14 +80,31 @@ export async function generateInvestmentSuggestion(userProfile) {
  */
 export async function explainLike18(term) {
   try {
-    const prompt = `Explain ${term} in 2-3 simple, friendly sentences to an 18-year-old beginner. Avoid jargon.`;
-    
+    const prompt = `
+You are a friendly financial educator explaining concepts to an 18-year-old who is completely new to investing.
+
+📘 Your task is to explain the following investment-related term in a **very simple, friendly, and relatable way**:
+- Term: "${term}"
+
+📌 Instructions:
+- Use **2 to 3 short sentences** only.
+- Use analogies, comparisons, or examples a teenager can understand.
+- Avoid technical jargon, definitions, or complicated explanations.
+- Never assume prior knowledge of finance.
+- Be warm, clear, and engaging like a mentor.
+
+🎯 Format:
+Just return the explanation. Do NOT prefix with "Here's the explanation" or anything similar.
+
+Now explain "${term}" to an 18-year-old beginner:
+`;
+
     const result = await model.generateContent(prompt);
     const explanation = result.response.text();
-    
+
     return {
       success: true,
-      explanation
+      explanation,
     };
   } catch (error) {
     console.error("Error explaining term:", error);
@@ -95,11 +112,74 @@ export async function explainLike18(term) {
     const errorMessage = `Explanation failed: ${error.message}. 
       This might be due to API changes or quota limits. 
       You can try again later or check the Gemini API documentation for updates.`;
-    
+
     return {
       success: false,
       error: errorMessage,
-      explanation: `Sorry, I couldn't explain "${term}" right now. The AI explanation service is temporarily unavailable.`
+      explanation: `Sorry, I couldn't explain "${term}" right now. The AI explanation service is temporarily unavailable.`,
+    };
+  }
+}
+
+/**
+ * Handles chatbot-like conversation strictly about investment-related questions
+ * @param {string} userMessage - The user's question or message
+ * @returns {Promise<Object>} - The assistant's reply
+ */
+export async function investmentChatBot(messages) {
+  try {
+    const intro = `
+You are **FunWise AI**, the official AI Chat Assistant of **FunWise** — a financial education and investment advisory platform for beginners in India.
+
+🧠 Your role is to assist users in a **simple, beginner-friendly** way. Keep all responses:
+- Clear and jargon-free
+- Friendly and supportive
+- Short and structured unless asked for details
+
+💼 You are only allowed to answer topics like:
+- SIPs (Systematic Investment Plans)
+- Mutual Funds
+- Fixed Deposits
+- Investment Goals
+- Portfolio Planning
+- Tax-saving investments (e.g., ELSS)
+- Index funds, ETFs, Gold
+- Risk tolerance basics
+- How to start investing
+- Common investment terms (NAV, CAGR, corpus, etc.)
+
+🚫 Do NOT answer questions about politics, science, personal issues, or anything unrelated to investing. If asked, politely say:
+> “I'm here to help with investment and finance topics only through FunWise 😊. Ask me anything about investing!”
+
+💬 Additional Guidelines:
+- Use relatable analogies (e.g., “SIP is like a monthly piggy bank for your future.”)
+- Always assume the user is new to finance
+- Wait for users to ask questions — do not give unsolicited explanations
+
+Below is the conversation so far:
+`;
+
+    const conversation = messages
+      .map(
+        (msg) => `${msg.role === "user" ? "User" : "FunWise AI"}: ${msg.text}`
+      )
+      .join("\n");
+
+    const prompt = `${intro}\n${conversation}\n\nFunWise AI:`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+
+    return {
+      success: true,
+      reply: response.text().trim(),
+    };
+  } catch (error) {
+    console.error("Chatbot error:", error);
+    return {
+      success: false,
+      reply:
+        "Sorry, I'm currently unable to respond. Please try again shortly.",
     };
   }
 }
