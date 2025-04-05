@@ -84,7 +84,11 @@ export default function Navbar() {
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900">{user?.name || profile?.name || 'User'}</p>
                       <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-                      <p className="text-xs text-gray-500 truncate">Risk Profile: {profile?.riskType || 'Not Set'}</p>
+                      <p className="text-xs text-gray-500 truncate">
+                        Risk: {profile?.riskProfile ? 
+                          profile.riskProfile.charAt(0).toUpperCase() + profile.riskProfile.slice(1) 
+                          : 'Loading...'}
+                      </p>
                     </div>
 
                     <div className="py-2">
