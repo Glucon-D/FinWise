@@ -44,7 +44,7 @@ export default function Settings() {
       icon: <FiUser className="w-5 h-5" />,
       content: (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             {/* Editable Name Section with Avatar */}
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-600 mb-1">Name</p>
