@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "../context/ProfileContext";
 import RiskTag from "../components/RiskTag";
@@ -9,14 +10,38 @@ import {
   FiPieChart,
   FiActivity,
   FiLoader,
+  FiInfo,
+  FiX,
 } from "react-icons/fi";
 import { BiRupee } from "react-icons/bi";
 import { formatToRupees, formatNumber } from "../utils/formatters";
 import { useAuth } from "../context/AuthContext";
+import { explainLike18 } from "../services/gemini";
 
 export default function Dashboard() {
   const { profile, loading } = useProfile();
   const { user } = useAuth();
+  const [explanation, setExplanation] = useState("");
+  const [explainedTerm, setExplainedTerm] = useState("");
+  const [explainLoading, setExplainLoading] = useState(false);
+
+  const handleExplain = async (term) => {
+    setExplainLoading(true);
+    setExplainedTerm(term);
+    try {
+      const result = await explainLike18(term);
+      if (result.success) {
+        setExplanation(result.explanation);
+      } else {
+        setExplanation(`Sorry, I couldn't explain ${term} right now.`);
+      }
+    } catch (error) {
+      console.error("Error getting explanation:", error);
+      setExplanation(`Sorry, I couldn't explain ${term} right now.`);
+    } finally {
+      setExplainLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -73,7 +98,19 @@ export default function Dashboard() {
     {
       icon: <FiPieChart className="w-6 h-6" />,
       label: "Risk Profile",
-      value: <RiskTag risk={profile.riskAppetite} />,
+      value: (
+        <div className="flex items-center gap-2">
+          <RiskTag risk={profile.riskAppetite} />
+          <button
+            onClick={() =>
+              handleExplain(profile.riskProfile || "Investment Risk Profile")
+            }
+            className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded flex items-center"
+          >
+            🧠 Explain
+          </button>
+        </div>
+      ),
       subtext: "Investment Strategy",
     },
   ];
@@ -149,7 +186,7 @@ export default function Dashboard() {
                   {card.label}
                 </h3>
               </div>
-              <p className="text-2xl font-bold mb-1">{card.value}</p>
+              <div className="text-2xl font-bold mb-1">{card.value}</div>
               <p className="text-sm text-emerald-100">{card.subtext}</p>
             </div>
           ))}
@@ -185,13 +222,22 @@ export default function Dashboard() {
           </h2>
           <div className="space-y-4">
             <p className="text-gray-600 mb-4">
-              Based on your {getRiskDisplayText(profile.riskAppetite)} risk
-              profile, we recommend:
+              Based on your{" "}
+              {profile.riskProfile || getRiskDisplayText(profile.riskAppetite)}{" "}
+              risk profile, we recommend:
             </p>
             <div className="space-y-4">
               {Object.entries(allocation).map(([type, percentage]) => (
                 <div key={type} className="flex items-center justify-between">
-                  <span className="text-gray-600 capitalize">{type}</span>
+                  <span className="text-gray-600 capitalize">
+                    {type}
+                    <button
+                      onClick={() => handleExplain(type)}
+                      className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
+                    >
+                      🧠 Explain
+                    </button>
+                  </span>
                   <div className="flex items-center gap-4">
                     <div className="w-48 h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
@@ -212,6 +258,36 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
+
+            {profile.investmentType && profile.investmentType.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-md font-medium text-gray-700 mb-2">
+                  AI-Recommended Investment Types
+                  <button
+                    onClick={() => handleExplain("Investment Types")}
+                    className="ml-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded inline-flex items-center"
+                  >
+                    🧠 Explain
+                  </button>
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {profile.investmentType.map((type, index) => (
+                    <div
+                      key={index}
+                      className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center"
+                    >
+                      {type}
+                      <button
+                        onClick={() => handleExplain(type)}
+                        className="ml-1 bg-blue-100 hover:bg-blue-200 rounded-full w-5 h-5 inline-flex items-center justify-center"
+                      >
+                        🎓
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <Link
@@ -223,6 +299,44 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Explanation Modal */}
+      {explanation && (
+        <div className="fixed inset-0 backdrop-blur-xl  flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setExplanation("")}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="bg-emerald-100 text-emerald-600 p-2 rounded-full">
+                <FiInfo className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-800">
+                Understanding {explainedTerm}
+              </h3>
+            </div>
+            {explainLoading ? (
+              <div className="text-center py-6">
+                <FiLoader className="w-6 h-6 text-emerald-500 mx-auto mb-2 animate-spin" />
+                <p className="text-gray-500">Getting explanation...</p>
+              </div>
+            ) : (
+              <div className="text-gray-700 leading-relaxed">{explanation}</div>
+            )}
+            <div className="mt-6 text-right">
+              <button
+                onClick={() => setExplanation("")}
+                className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

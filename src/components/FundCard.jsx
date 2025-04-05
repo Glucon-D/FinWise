@@ -2,8 +2,8 @@ import RiskTag from './RiskTag'
 import { FiTrendingUp, FiBarChart2, FiInfo } from 'react-icons/fi'
 import { formatCurrency, formatPercentage } from '../utils/formatters'
 
-export default function FundCard({ fund }) {
-  const { name, description, risk, nav, returns, minInvestment, category } = fund
+export default function FundCard({ fund, onExplain }) {
+  const { name, description, risk, nav, returns, minInvestment, category, type } = fund
 
   return (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
@@ -14,7 +14,18 @@ export default function FundCard({ fund }) {
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">{category}</span>
               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-              <RiskTag risk={risk} />
+              <div className="flex items-center gap-1">
+                <RiskTag risk={risk} />
+                {onExplain && (
+                  <button
+                    onClick={() => onExplain(`${risk} risk in investments`)}
+                    className="ml-1 bg-gray-100 hover:bg-gray-200 rounded-full w-5 h-5 inline-flex items-center justify-center text-xs"
+                    title="Explain this risk level"
+                  >
+                    🎓
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex flex-col items-end">
@@ -23,7 +34,18 @@ export default function FundCard({ fund }) {
           </div>
         </div>
       
-        <p className="text-gray-600 text-sm mb-6">{description}</p>
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-gray-600 text-sm">{description}</p>
+          {onExplain && (
+            <button
+              onClick={() => onExplain(type || category)}
+              className="ml-2 flex-shrink-0 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded"
+            >
+              🧠 Explain
+
+            </button>
+          )}
+        </div>
         
         <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg mb-4">
           <div className="text-center">
@@ -44,6 +66,14 @@ export default function FundCard({ fund }) {
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <FiInfo className="text-gray-400" />
             <span>Min. Investment: {formatCurrency(minInvestment)}</span>
+            {onExplain && (
+              <button
+                onClick={() => onExplain("Minimum Investment")}
+                className="bg-gray-100 hover:bg-gray-200 rounded-full w-5 h-5 inline-flex items-center justify-center text-xs"
+              >
+                🎓
+              </button>
+            )}
           </div>
           <button className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
             <FiBarChart2 />
