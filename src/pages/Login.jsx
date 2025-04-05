@@ -1,19 +1,65 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { FiMail, FiLock } from 'react-icons/fi'
+import { FiMail, FiLock, FiAlertCircle, FiCheck } from 'react-icons/fi'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { login } = useAuth()
+  const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const { login, isAuthenticated, loading } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  
+  // Get the redirect path from location state or default to dashboard
+  const from = location.state?.from?.pathname || '/dashboard'
 
-  const handleSubmit = (e) => {
+  // If user is already authenticated, redirect them
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      navigate(from, { replace: true })
+    }
+  }, [isAuthenticated, loading, navigate, from])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In a real app, we would validate credentials here
-    login()
-    navigate('/dashboard')
+    setError('')
+    setSuccessMessage('')
+    setIsLoading(true)
+    
+    try {
+      const result = await login(email, password)
+      
+      if (result.success) {
+        if (result.message) {
+          // If there's a message but login was successful (e.g., "already logged in")
+          setSuccessMessage(result.message)
+          // Redirect after a brief delay to show the message
+          setTimeout(() => navigate(from), 1500)
+        } else {
+          // Normal successful login
+          navigate(from)
+        }
+      } else {
+        setError(result.error)
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.')
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // If still loading auth state, show loading indicator
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+      </div>
+    )
   }
 
   return (
@@ -24,6 +70,20 @@ export default function Login() {
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start">
+            <FiAlertCircle className="text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start">
+            <FiCheck className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+            <p className="text-sm text-green-600">{successMessage}</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -65,9 +125,10 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-white bg-emerald-500 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            disabled={isLoading}
+            className="w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-white bg-emerald-500 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
