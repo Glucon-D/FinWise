@@ -13,6 +13,12 @@ import Settings from './pages/Settings'
 import { AuthProvider } from './context/AuthContext'
 import { ProfileProvider } from './context/ProfileContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { Calculator } from './pages/Calculator'
+import { SipCalculator } from './components/SipCalculator'
+import { FDCalculator } from './components/FDCalculator'
+import EMICalculator from './components/EMICalculator'
+import SWPCalculator from './components/SWPCalculator'
+import MFCalculator from './components/MFCalculator'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +40,15 @@ const router = createBrowserRouter([
         path: '/fund-suggestions', 
         element: <ProtectedRoute><FundSuggestions /></ProtectedRoute>
       },
+      { 
+        path: '/calculator', 
+        element: <ProtectedRoute><Calculator /></ProtectedRoute>
+      },
+      { path: '/SipCalculator', element: <SipCalculator/>},
+      { path: '/FDCalculator', element: <FDCalculator/>},
+      { path: '/EMICalculator', element: <EMICalculator/>},
+      { path: '/SWPCalculator', element: <SWPCalculator/>},
+      { path: '/MFCalculator', element: <MFCalculator/>},
       { 
         path: '/settings', 
         element: <ProtectedRoute><Settings /></ProtectedRoute>
