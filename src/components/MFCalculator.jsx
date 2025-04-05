@@ -1,3 +1,4 @@
+// MFCalculator updated with synced number inputs
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { FiInfo, FiTrendingUp, FiDollarSign, FiClock } from 'react-icons/fi';
@@ -37,15 +38,23 @@ const MFCalculator = () => {
       <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left side - Input controls */}
         <div className="space-y-6">
+          {/* Investment Amount */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiDollarSign className="text-emerald-500" />
                 Investment Amount
               </label>
-              <div className="bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md">
-                {formatCurrency(investment)}
-              </div>
+              <input
+                type="number"
+                value={investment}
+                onChange={(e) => {
+                  let val = Number(e.target.value);
+                  setInvestment(val < 0.001 ? 1 : val);
+                }}
+                onFocus={(e) => e.target.select()}
+                className="w-28 text-right bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -62,15 +71,20 @@ const MFCalculator = () => {
             </div>
           </div>
 
+          {/* Expected Return Rate */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiTrendingUp className="text-indigo-500" />
                 Expected Return Rate (p.a)
               </label>
-              <div className="bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md">
-                {returnRate}%
-              </div>
+              <input
+                type="number"
+                value={returnRate}
+                onChange={(e) => setReturnRate(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -87,15 +101,20 @@ const MFCalculator = () => {
             </div>
           </div>
 
+          {/* Investment Period */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiClock className="text-amber-500" />
                 Investment Period
               </label>
-              <div className="bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md">
-                {timePeriod} years
-              </div>
+              <input
+                type="number"
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -111,6 +130,7 @@ const MFCalculator = () => {
             </div>
           </div>
 
+          {/* Summary */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-600">Investment amount:</span>
@@ -153,17 +173,17 @@ const MFCalculator = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value) => formatCurrency(value)}
-                    contentStyle={{ 
+                    contentStyle={{
                       backgroundColor: 'white',
                       borderRadius: '8px',
                       padding: '8px',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                     }}
                   />
-                  <Legend 
-                    verticalAlign="bottom" 
+                  <Legend
+                    verticalAlign="bottom"
                     height={36}
                     iconType="circle"
                     iconSize={10}

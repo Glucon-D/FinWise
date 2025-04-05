@@ -1,3 +1,4 @@
+// Updated EMI Calculator with synced inputs and sliders
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { FiInfo, FiTrendingUp, FiDollarSign, FiClock } from 'react-icons/fi';
@@ -46,15 +47,25 @@ const EMICalculator = () => {
 
       <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
+          {/* Loan Amount */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiDollarSign className="text-emerald-500" />
                 Loan Amount
               </label>
-              <div className="bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md">
-                {formatCurrency(loanAmount)}
-              </div>
+              <input
+                type="number"
+                value={loanAmount}
+                onChange={(e) => {
+                  let val = Number(e.target.value);
+                  setLoanAmount(val < 0.001 ? 1 : val);
+                }}
+                onFocus={(e) => {
+                  if (e.target.value === '0') e.target.select();
+                }}
+                className="w-28 text-right bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -71,15 +82,20 @@ const EMICalculator = () => {
             </div>
           </div>
 
+          {/* Interest Rate */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiTrendingUp className="text-indigo-500" />
                 Interest Rate (p.a)
               </label>
-              <div className="bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md">
-                {interestRate}%
-              </div>
+              <input
+                type="number"
+                value={interestRate}
+                onChange={(e) => setInterestRate(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -96,15 +112,20 @@ const EMICalculator = () => {
             </div>
           </div>
 
+          {/* Loan Tenure */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiClock className="text-amber-500" />
                 Loan Tenure
               </label>
-              <div className="bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md">
-                {loanTenure} years
-              </div>
+              <input
+                type="number"
+                value={loanTenure}
+                onChange={(e) => setLoanTenure(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"

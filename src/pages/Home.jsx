@@ -323,68 +323,75 @@ export default function Home() {
 
       {/* Features Grid - Larger and better scaled */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 py-10 sm:py-20 mt-6 sm:mt-8 px-2 sm:px-0"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={staggerContainer}
+  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 py-10 sm:py-20 mt-6 sm:mt-8 px-2 sm:px-0"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, margin: "-100px" }}
+  variants={staggerContainer}
+>
+  {[
+    {
+      icon: FiTarget,
+      title: "Personalized Strategy",
+      description:
+        "Get investment recommendations tailored to your goals, risk tolerance, and timeline.",
+      bgColor: "bg-blue-100",
+      borderColor: "blue-300"
+    },
+    {
+      icon: FiShield,
+      title: "Risk Management",
+      description:
+        "Understand and manage your investment risks with our smart risk assessment system.",
+      bgColor: "bg-red-100",
+      borderColor: "red-300"
+    },
+    {
+      icon: FiTrendingUp,
+      title: "Growth Focused",
+      description:
+        "Access curated investment funds designed to help you achieve your financial goals.",
+      bgColor: "bg-purple-100",
+      borderColor: "purple-300"
+    },
+  ].map((feature, index) => (
+    <motion.div
+      key={index}
+      className={`text-center p-5 sm:p-8 rounded-xl ${feature.bgColor} shadow-md hover:shadow-lg transition-all border border-${feature.borderColor}`}
+      variants={fadeInUp}
+      whileHover={{ scale: 1.02 }}
+    >
+      <div
+        className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-5 rounded-full flex items-center justify-center bg-white`}
+        style={{
+          width: "min(max(4rem, 12vw), 5rem)",
+          height: "min(max(4rem, 12vw), 5rem)",
+        }}
       >
-        {[
-          {
-            icon: FiTarget,
-            title: "Personalized Strategy",
-            description:
-              "Get investment recommendations tailored to your goals, risk tolerance, and timeline.",
+        {createElement(feature.icon, {
+          className: "text-emerald-500",
+          style: {
+            width: "min(max(2rem, 6vw), 2.5rem)",
+            height: "min(max(2rem, 6vw), 2.5rem)",
           },
-          {
-            icon: FiShield,
-            title: "Risk Management",
-            description:
-              "Understand and manage your investment risks with our smart risk assessment system.",
-          },
-          {
-            icon: FiTrendingUp,
-            title: "Growth Focused",
-            description:
-              "Access curated investment funds designed to help you achieve your financial goals.",
-          },
-        ].map((feature, index) => (
-          <motion.div
-            key={index}
-            className="text-center p-5 sm:p-8 rounded-xl bg-white shadow-md hover:shadow-lg transition-all"
-            variants={fadeInUp}
-            whileHover={{ scale: 1.02 }}
-          >
-            <div
-              className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-5 rounded-full bg-emerald-100 flex items-center justify-center"
-              style={{
-                width: "min(max(4rem, 12vw), 5rem)",
-                height: "min(max(4rem, 12vw), 5rem)",
-              }}
-            >
-              {createElement(feature.icon, {
-                className: "text-emerald-500",
-                style: {
-                  width: "min(max(2rem, 6vw), 2.5rem)",
-                  height: "min(max(2rem, 6vw), 2.5rem)",
-                },
-              })}
-            </div>
-            <h3
-              className="text-lg sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-3"
-              style={{ fontSize: "min(max(1.25rem, 4vw), 1.5rem)" }}
-            >
-              {feature.title}
-            </h3>
-            <p
-              className="text-sm sm:text-lg text-gray-600"
-              style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}
-            >
-              {feature.description}
-            </p>
-          </motion.div>
-        ))}
-      </motion.div>
+        })}
+      </div>
+      <h3
+        className="text-lg sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-3"
+        style={{ fontSize: "min(max(1.25rem, 4vw), 1.5rem)" }}
+      >
+        {feature.title}
+      </h3>
+      <p
+        className="text-sm sm:text-lg text-gray-600"
+        style={{ fontSize: "min(max(0.875rem, 3vw), 1.125rem)" }}
+      >
+        {feature.description}
+      </p>
+    </motion.div>
+  ))}
+</motion.div>
+
 
       {/* Enhanced CTA Section - Better scaling */}
       <motion.div

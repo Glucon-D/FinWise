@@ -1,3 +1,4 @@
+// Updated FDCalculator with input + slider sync
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { FiInfo, FiTrendingUp, FiDollarSign, FiClock } from 'react-icons/fi';
@@ -46,9 +47,13 @@ export const FDCalculator = () => {
                 <FiDollarSign className="text-emerald-500" />
                 Total Investment
               </label>
-              <div className="bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md">
-                {formatCurrency(investment)}
-              </div>
+              <input
+                type="number"
+                value={investment}
+                onChange={(e) => setInvestment(Number(e.target.value))}
+                onFocus={(e) => e.target.select()}
+                className="w-28 text-right bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -72,9 +77,13 @@ export const FDCalculator = () => {
                 <FiTrendingUp className="text-indigo-500" />
                 Interest Rate (p.a)
               </label>
-              <div className="bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md">
-                {interestRate}%
-              </div>
+              <input
+                type="number"
+                value={interestRate}
+                onChange={(e) => setInterestRate(Number(e.target.value))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -104,6 +113,7 @@ export const FDCalculator = () => {
                   className="w-20 bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md text-center"
                   value={timePeriod}
                   onChange={(e) => setTimePeriod(Number(e.target.value))}
+                  onFocus={(e) => e.target.select()}
                 />
                 <select
                   value={timeUnit}
@@ -223,5 +233,3 @@ export const FDCalculator = () => {
     </div>
   );
 };
-
-

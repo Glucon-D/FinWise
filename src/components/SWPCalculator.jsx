@@ -1,3 +1,4 @@
+// SWPCalculator updated with synced number inputs
 import React, { useState, useEffect, useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { FiInfo, FiTrendingUp, FiDollarSign, FiClock } from 'react-icons/fi';
@@ -13,7 +14,6 @@ const SWPCalculator = () => {
     const r = expectedReturn / 100 / 12;
     const n = timePeriod * 12;
 
-    // Formula for Future Value of SWP
     const futureValue =
       totalInvestment * Math.pow(1 + r, n) -
       withdrawalPerMonth * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
@@ -23,7 +23,6 @@ const SWPCalculator = () => {
 
   const totalWithdrawal = withdrawalPerMonth * timePeriod * 12;
 
-  // Format currency helper
   const formatCurrency = (value) => {
     if (value >= 10000000) return `₹${(value / 10000000).toFixed(2)} Cr`;
     if (value >= 100000) return `₹${(value / 100000).toFixed(2)} L`;
@@ -32,12 +31,17 @@ const SWPCalculator = () => {
 
   const COLORS = ['#059669', '#6366F1', '#F59E0B'];
 
-  // Calculate chart data
-  const chartData = useMemo(() => [
-    { name: 'Remaining corpus', value: Math.max(0, finalValue) },
-    { name: 'Total withdrawal', value: totalWithdrawal },
-    { name: 'Returns utilized', value: Math.max(0, totalWithdrawal - (totalInvestment - finalValue)) }
-  ], [finalValue, totalWithdrawal, totalInvestment]);
+  const chartData = useMemo(
+    () => [
+      { name: 'Remaining corpus', value: Math.max(0, finalValue) },
+      { name: 'Total withdrawal', value: totalWithdrawal },
+      {
+        name: 'Returns utilized',
+        value: Math.max(0, totalWithdrawal - (totalInvestment - finalValue)),
+      },
+    ],
+    [finalValue, totalWithdrawal, totalInvestment]
+  );
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-full">
@@ -49,15 +53,23 @@ const SWPCalculator = () => {
       <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left side - Input controls */}
         <div className="space-y-6">
+          {/* Total Investment */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiDollarSign className="text-emerald-500" />
                 Total Investment
               </label>
-              <div className="bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md">
-                {formatCurrency(totalInvestment)}
-              </div>
+              <input
+                type="number"
+                value={totalInvestment}
+                onChange={(e) => {
+                  let val = Number(e.target.value);
+                  setTotalInvestment(val < 0.001 ? 1 : val);
+                }}
+                onFocus={(e) => e.target.select()}
+                className="w-28 text-right bg-emerald-50 text-emerald-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -74,15 +86,20 @@ const SWPCalculator = () => {
             </div>
           </div>
 
+          {/* Monthly Withdrawal */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiDollarSign className="text-indigo-500" />
                 Monthly Withdrawal
               </label>
-              <div className="bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md">
-                {formatCurrency(withdrawalPerMonth)}
-              </div>
+              <input
+                type="number"
+                value={withdrawalPerMonth}
+                onChange={(e) => setWithdrawalPerMonth(Number(e.target.value))}
+                onFocus={(e) => e.target.select()}
+                className="w-28 text-right bg-indigo-50 text-indigo-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -99,15 +116,20 @@ const SWPCalculator = () => {
             </div>
           </div>
 
+          {/* Expected Return Rate */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiTrendingUp className="text-amber-500" />
                 Expected Return Rate (p.a)
               </label>
-              <div className="bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md">
-                {expectedReturn}%
-              </div>
+              <input
+                type="number"
+                value={expectedReturn}
+                onChange={(e) => setExpectedReturn(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-amber-50 text-amber-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -124,15 +146,20 @@ const SWPCalculator = () => {
             </div>
           </div>
 
+          {/* Time Period */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="flex items-center gap-2 text-gray-700">
                 <FiClock className="text-purple-500" />
                 Time Period
               </label>
-              <div className="bg-purple-50 text-purple-600 font-medium px-3 py-1 rounded-md">
-                {timePeriod} years
-              </div>
+              <input
+                type="number"
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(Math.max(1, Number(e.target.value)))}
+                onFocus={(e) => e.target.select()}
+                className="w-20 text-right bg-purple-50 text-purple-600 font-medium px-3 py-1 rounded-md"
+              />
             </div>
             <input
               type="range"
@@ -148,6 +175,7 @@ const SWPCalculator = () => {
             </div>
           </div>
 
+          {/* Summary */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-600">Total investment:</span>
@@ -186,17 +214,17 @@ const SWPCalculator = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value) => formatCurrency(value)}
-                    contentStyle={{ 
+                    contentStyle={{
                       backgroundColor: 'white',
                       borderRadius: '8px',
                       padding: '8px',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                     }}
                   />
-                  <Legend 
-                    verticalAlign="bottom" 
+                  <Legend
+                    verticalAlign="bottom"
                     height={36}
                     iconType="circle"
                     iconSize={10}
