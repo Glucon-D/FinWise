@@ -19,7 +19,10 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-emerald-500 text-white px-4 py-2 rounded-lg z-[60]">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-20 focus:right-4 focus:bg-emerald-500 focus:text-white focus:px-6 focus:py-2 focus:rounded-lg focus:shadow-lg focus:z-[100] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all"
+      >
         Skip to main content
       </a>
       

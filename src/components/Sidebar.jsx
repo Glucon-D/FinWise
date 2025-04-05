@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useProfile } from '../context/ProfileContext'
+import { useAuth } from '../context/AuthContext'
 import { 
   FiHome, 
   FiPieChart, 
@@ -14,11 +15,14 @@ import {
 } from 'react-icons/fi'
 
 import { IoIosCalculator } from "react-icons/io";
+import { motion } from 'framer-motion'
+import { GiCash } from 'react-icons/gi'
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
   const { profile } = useProfile()
+  const { user } = useAuth()
 
   const navigationItems = [
     { 
@@ -74,7 +78,13 @@ export default function Sidebar() {
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-400 transition-colors"
         aria-label="Toggle Menu"
       >
-        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        <motion.div
+          initial={{ rotate: 0 }}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </motion.div>
       </button>
 
       {/* Sidebar */}
@@ -84,15 +94,20 @@ export default function Sidebar() {
       >
         <div className="flex flex-col h-full">
           {/* Profile Summary */}
-          {profile && (
+          {(profile || user) && (
             <div className="p-4 border-b border-gray-100 bg-gray-50">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                  {profile.name ? profile.name[0].toUpperCase() : <FiUser />}
+                  {(user?.name || profile?.name) ? (user?.name || profile?.name)[0].toUpperCase() : <FiUser />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{profile.name || 'User'}</p>
-                  <p className="text-xs text-gray-500">Risk: {profile.riskType || 'Not Set'}</p>
+                  <p className="text-sm font-medium text-gray-800">{user?.name || profile?.name || 'User'}</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
+                  <p className="text-xs text-gray-500">
+                    Risk: {profile?.riskProfile ? 
+                      profile.riskProfile.charAt(0).toUpperCase() + profile.riskProfile.slice(1) 
+                      : 'Loading...'}
+                  </p>
                 </div>
               </div>
             </div>
