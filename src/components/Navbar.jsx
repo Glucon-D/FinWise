@@ -12,7 +12,7 @@ import {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated, user, logout, loading } = useAuth()
   const { profile } = useProfile()
   const location = useLocation()
   const navigate = useNavigate()
@@ -32,9 +32,20 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/login')
+  }
+
+  // Get first initial for avatar
+  const getInitial = () => {
+    if (user && user.name) {
+      return user.name[0].toUpperCase()
+    }
+    if (profile?.name) {
+      return profile.name[0].toUpperCase()
+    }
+    return <FiUser />
   }
 
   return (
@@ -53,17 +64,17 @@ export default function Navbar() {
           {showFullNav && <div className="w-36" />}
           
           <div className="flex items-center ml-auto">
-            {isAuthenticated ? (
+            {!loading && isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsOpen(!isOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                    {profile?.name ? profile.name[0].toUpperCase() : <FiUser />}
+                    {getInitial()}
                   </div>
                   <span className="hidden sm:block text-gray-700">
-                    {profile?.name || 'User'}
+                    {user?.name || profile?.name || 'User'}
                   </span>
                   <FiChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -71,7 +82,8 @@ export default function Navbar() {
                 {isOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{profile?.name || 'User'}</p>
+                      <p className="text-sm font-medium text-gray-900">{user?.name || profile?.name || 'User'}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                       <p className="text-xs text-gray-500 truncate">Risk Profile: {profile?.riskType || 'Not Set'}</p>
                     </div>
 
@@ -114,7 +126,7 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : !loading ? (
               <>
                 <Link 
                   to="/login"
@@ -130,7 +142,7 @@ export default function Navbar() {
                   Get Started
                 </Link>
               </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
