@@ -54,6 +54,44 @@ export const mutualFunds = {
         fundManager: "R. Srinivasan",
         rating: 4
       }
+    ],
+    smallCap: [
+      {
+        name: "Nippon India Small Cap Fund",
+        code: "NIPSMALL",
+        category: "Small Cap",
+        nav: 89.45,
+        aum: "28,987 Cr",
+        expense: 1.85,
+        returns: {
+          oneYear: 22.5,
+          threeYear: 25.2,
+          fiveYear: 18.8
+        },
+        riskLevel: "High",
+        minimumInvestment: 1000,
+        fundManager: "Samir Rachh",
+        rating: 5
+      }
+    ],
+    sectoral: [
+      {
+        name: "ICICI Pru Technology Fund",
+        code: "ICICTECH",
+        category: "Sectoral",
+        nav: 145.67,
+        aum: "8,234 Cr",
+        expense: 1.88,
+        returns: {
+          oneYear: 25.4,
+          threeYear: 28.7,
+          fiveYear: 21.3
+        },
+        riskLevel: "Very High",
+        minimumInvestment: 5000,
+        fundManager: "Vaibhav Shah",
+        rating: 4
+      }
     ]
   },
   debt: {
@@ -73,6 +111,25 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Manish Banthia",
+        rating: 4
+      }
+    ],
+    gilt: [
+      {
+        name: "SBI Magnum Gilt Fund",
+        code: "SBIGILT",
+        category: "Gilt",
+        nav: 52.34,
+        aum: "4,567 Cr",
+        expense: 0.82,
+        returns: {
+          oneYear: 5.8,
+          threeYear: 7.9,
+          fiveYear: 8.2
+        },
+        riskLevel: "Low",
+        minimumInvestment: 5000,
+        fundManager: "Dinesh Ahuja",
         rating: 4
       }
     ]
@@ -115,6 +172,25 @@ export const mutualFunds = {
         fundManager: "Sahil Kapoor",
         rating: 3
       }
+    ],
+    dynamic: [
+      {
+        name: "ICICI Pru Balanced Advantage",
+        code: "ICICIBA",
+        category: "Dynamic Asset Allocation",
+        nav: 178.90,
+        aum: "42,678 Cr",
+        expense: 1.67,
+        returns: {
+          oneYear: 12.8,
+          threeYear: 14.5,
+          fiveYear: 11.9
+        },
+        riskLevel: "Moderate",
+        minimumInvestment: 5000,
+        fundManager: "Sankaran Naren",
+        rating: 5
+      }
     ]
   },
   index: {
@@ -141,7 +217,7 @@ export const mutualFunds = {
 }
 
 export const riskProfiles = {
-  conservative: ["ICICIST", "UTINIF"],
-  moderate: ["HDFTOP100", "AXISBLU", "KOTBAL"],
-  aggressive: ["SBIMID", "DSPEB"]
+  conservative: ["ICICIST", "UTINIF", "SBIGILT"],
+  moderate: ["HDFTOP100", "AXISBLU", "KOTBAL", "ICICIBA"],
+  aggressive: ["SBIMID", "DSPEB", "NIPSMALL", "ICICTECH"]
 }
