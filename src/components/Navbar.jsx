@@ -9,6 +9,8 @@ import {
   FiChevronDown,
   FiPieChart
 } from 'react-icons/fi'
+import { motion } from 'framer-motion'
+import { GiCash } from 'react-icons/gi'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -54,9 +56,19 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto h-16 flex justify-between items-center">
           <div className={`flex items-center ${showFullNav ? 'lg:fixed lg:left-6 z-50' : ''}`}>
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
-                <span className="text-xl font-bold text-white">F</span>
-              </div>
+              <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeInOut",
+                  type: "spring",
+                  stiffness: 100,
+                }}
+                className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center"
+              >
+                <GiCash className="text-2xl text-white" />
+              </motion.div>
               <span className="text-xl font-bold text-gray-800">FinWise</span>
             </Link>
           </div>

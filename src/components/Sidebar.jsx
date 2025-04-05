@@ -15,6 +15,8 @@ import {
 } from 'react-icons/fi'
 
 import { IoIosCalculator } from "react-icons/io";
+import { motion } from 'framer-motion'
+import { GiCash } from 'react-icons/gi'
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -76,7 +78,13 @@ export default function Sidebar() {
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-400 transition-colors"
         aria-label="Toggle Menu"
       >
-        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        <motion.div
+          initial={{ rotate: 0 }}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </motion.div>
       </button>
 
       {/* Sidebar */}
