@@ -1,94 +1,82 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/ProfileContext'
-import { FiInfo, FiArrowRight } from 'react-icons/fi'
+import { FiInfo, FiArrowRight, FiAlertCircle } from 'react-icons/fi'
+import Toast from '../components/Toast'
 
 export default function ProfileForm() {
   const [currentStep, setCurrentStep] = useState(1)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [toastType, setToastType] = useState('success')
   const [formData, setFormData] = useState({
-    name: '',
     age: '',
-    occupation: '',
-    income: '',
-    existingInvestments: '',
     investmentPeriod: '',
-    initialInvestment: '',
     monthlyInvestment: '',
-    riskTolerance: '',
+    initialInvestment: '',
     investmentGoal: '',
-    dependents: '',
-    emergencyFund: ''
+    riskTolerance: '',
   })
   
-  const { updateProfile } = useProfile()
+  const { updateProfile, loading } = useProfile()
   const navigate = useNavigate()
-
-  const formatToRupees = (value) => {
-    if (!value) return ''
-    const number = value.replace(/[^0-9]/g, '')
-    return `₹${Number(number).toLocaleString('en-IN')}`
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    if (['initialInvestment', 'monthlyInvestment', 'income', 'emergencyFund'].includes(name)) {
-      const numericValue = value.replace(/[^0-9]/g, '')
-      setFormData(prev => ({ ...prev, [name]: numericValue }))
+    if (['age', 'investmentPeriod', 'monthlyInvestment', 'initialInvestment'].includes(name)) {
+      setFormData(prev => ({ ...prev, [name]: parseInt(value) || '' }))
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
   }
 
+  const showMessage = (message, type = 'success') => {
+    setToastMessage(message)
+    setToastType(type)
+    setShowToast(true)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (currentStep < steps.length) {
+      setCurrentStep(prev => prev + 1)
+      return
+    }
+
+    try {
+      const result = await updateProfile(formData)
+      if (result.success) {
+        showMessage('Profile updated successfully!')
+        setTimeout(() => navigate('/dashboard'), 1500)
+      } else {
+        showMessage(result.error || 'Failed to update profile', 'error')
+      }
+    } catch (error) {
+      showMessage('An unexpected error occurred', 'error')
+      console.error('Profile update error:', error)
+    }
+  }
+
   const steps = [
     {
-      title: "Personal Details",
-      fields: ["name", "age", "occupation"]
-    },
-    {
-      title: "Financial Details",
-      fields: ["income", "existingInvestments", "emergencyFund"]
+      title: "Basic Information",
+      fields: ["age", "investmentPeriod"]
     },
     {
       title: "Investment Details",
-      fields: ["initialInvestment", "monthlyInvestment"]
+      fields: ["monthlyInvestment", "initialInvestment", "investmentGoal", "investmentPeriod"]
     },
     {
-      title: "Investment Strategy",
-      fields: ["investmentPeriod", "riskTolerance", "investmentGoal", "dependents"]
+      title: "Risk Assessment",
+      fields: ["riskTolerance"]
     }
   ]
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (currentStep < steps.length) {
-      setCurrentStep(prev => prev + 1)
-    } else {
-      updateProfile(formData)
-      navigate('/fund-suggestions')
-    }
-  }
 
   const renderField = (fieldName) => {
     const commonClasses = "w-full p-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
     
     switch (fieldName) {
-      case "name":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={commonClasses}
-                required
-              />
-            </label>
-          </div>
-        )
-
       case "age":
         return (
           <div className="space-y-2">
@@ -105,71 +93,25 @@ export default function ProfileForm() {
                   max="100"
                   required
                 />
-                <div className="absolute top-3 right-3">
-                  <FiInfo className="text-gray-400 hover:text-emerald-500 cursor-help" 
-                         title="Must be at least 18 years old" />
-                </div>
               </div>
             </label>
           </div>
         )
 
-      case "occupation":
+      case "investmentPeriod":
         return (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Occupation
-              <select
-                name="occupation"
-                value={formData.occupation}
-                onChange={handleChange}
-                className={`${commonClasses} cursor-pointer`}
-                required
-              >
-                <option value="">Select Occupation</option>
-                <option value="salaried">Salaried</option>
-                <option value="business">Business Owner</option>
-                <option value="professional">Professional</option>
-                <option value="student">Student</option>
-                <option value="retired">Retired</option>
-              </select>
-            </label>
-          </div>
-        )
-
-      case "income":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Annual Income
+              Investment Period (Years)
               <div className="relative mt-1">
                 <input
-                  type="text"
-                  name="income"
-                  value={formatToRupees(formData.income)}
+                  type="number"
+                  name="investmentPeriod"
+                  value={formData.investmentPeriod}
                   onChange={handleChange}
                   className={commonClasses}
-                  placeholder="₹5,00,000"
-                  required
-                />
-              </div>
-            </label>
-          </div>
-        )
-
-      case "initialInvestment":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Initial Investment Amount
-              <div className="relative mt-1">
-                <input
-                  type="text"
-                  name="initialInvestment"
-                  value={formatToRupees(formData.initialInvestment)}
-                  onChange={handleChange}
-                  className={commonClasses}
-                  placeholder="₹10,000"
+                  min="1"
+                  max="30"
                   required
                 />
               </div>
@@ -181,101 +123,39 @@ export default function ProfileForm() {
         return (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Monthly SIP Amount
+              Monthly Investment Amount
               <div className="relative mt-1">
                 <input
-                  type="text"
+                  type="number"
                   name="monthlyInvestment"
-                  value={formatToRupees(formData.monthlyInvestment)}
+                  value={formData.monthlyInvestment}
                   onChange={handleChange}
                   className={commonClasses}
-                  placeholder="₹5,000"
+                  min="100"
+                  max="10000000"
                   required
                 />
               </div>
+              <p className="text-xs text-gray-500 mt-1">Min: ₹100, Max: ₹1,00,00,000</p>
             </label>
           </div>
         )
 
-      case "riskTolerance":
+      case "initialInvestment":
         return (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Risk Tolerance
-              <select
-                name="riskTolerance"
-                value={formData.riskTolerance}
-                onChange={handleChange}
-                className={`${commonClasses} cursor-pointer`}
-                required
-              >
-                <option value="">Select Risk Level</option>
-                <option value="conservative">Conservative (Low Risk)</option>
-                <option value="moderate">Moderate (Medium Risk)</option>
-                <option value="aggressive">Aggressive (High Risk)</option>
-              </select>
-            </label>
-          </div>
-        )
-
-      case "emergencyFund":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Emergency Fund
+              Initial Investment (Lump Sum)
               <div className="relative mt-1">
                 <input
-                  type="text"
-                  name="emergencyFund"
-                  value={formatToRupees(formData.emergencyFund)}
+                  type="number"
+                  name="initialInvestment"
+                  value={formData.initialInvestment}
                   onChange={handleChange}
                   className={commonClasses}
-                  placeholder="₹1,00,000"
-                  required
+                  min="0"
                 />
-                <div className="absolute top-3 right-3">
-                  <FiInfo className="text-gray-400 hover:text-emerald-500 cursor-help" 
-                         title="Recommended: 6 months of expenses" />
-                </div>
               </div>
-            </label>
-          </div>
-        )
-
-      case "dependents":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Number of Dependents
-              <input
-                type="number"
-                name="dependents"
-                value={formData.dependents}
-                onChange={handleChange}
-                className={commonClasses}
-                min="0"
-                max="10"
-                required
-              />
-            </label>
-          </div>
-        )
-
-      case "investmentPeriod":
-        return (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Investment Period (Years)
-              <input
-                type="number"
-                name="investmentPeriod"
-                value={formData.investmentPeriod}
-                onChange={handleChange}
-                className={commonClasses}
-                min="1"
-                max="30"
-                required
-              />
             </label>
           </div>
         )
@@ -292,12 +172,33 @@ export default function ProfileForm() {
                 className={`${commonClasses} cursor-pointer`}
                 required
               >
-                <option value="">Select Goal</option>
-                <option value="retirement">Retirement</option>
-                <option value="wealth-creation">Wealth Creation</option>
-                <option value="child-education">Child Education</option>
-                <option value="home-purchase">Home Purchase</option>
-                <option value="tax-saving">Tax Saving</option>
+                <option value="">Select your goal</option>
+                <option value="Retirement">Retirement</option>
+                <option value="Buy a house">Buy a house</option>
+                <option value="Children's education">Children's education</option>
+                <option value="Wealth creation">Wealth creation</option>
+                <option value="Tax saving">Tax saving</option>
+              </select>
+            </label>
+          </div>
+        )
+
+      case "riskTolerance":
+        return (
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Risk Tolerance
+              <select
+                name="riskTolerance"
+                value={formData.riskTolerance}
+                onChange={handleChange}
+                className={`${commonClasses} cursor-pointer`}
+                required
+              >
+                <option value="">Select risk level</option>
+                <option value="low">Conservative (Low Risk)</option>
+                <option value="medium">Balanced (Medium Risk)</option>
+                <option value="high">Aggressive (High Risk)</option>
               </select>
             </label>
           </div>
@@ -341,16 +242,27 @@ export default function ProfileForm() {
                 type="button"
                 onClick={() => setCurrentStep(prev => prev - 1)}
                 className="px-4 py-2 text-emerald-600 hover:text-emerald-500"
+                disabled={loading}
               >
                 Back
               </button>
             )}
             <button
               type="submit"
-              className="ml-auto flex items-center gap-2 px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors"
+              disabled={loading}
+              className="ml-auto flex items-center gap-2 px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {currentStep === steps.length ? 'Get Recommendations' : 'Next'}
-              <FiArrowRight />
+              {loading ? (
+                <>
+                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                  <span>Processing...</span>
+                </>
+              ) : (
+                <>
+                  {currentStep === steps.length ? 'Create Profile' : 'Next'}
+                  <FiArrowRight />
+                </>
+              )}
             </button>
           </div>
         </form>
@@ -362,6 +274,14 @@ export default function ProfileForm() {
           Your information helps us provide personalized investment recommendations
         </p>
       </div>
+
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   )
 }
