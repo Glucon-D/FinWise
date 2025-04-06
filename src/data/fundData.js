@@ -5,18 +5,20 @@ export const mutualFunds = {
         name: "HDFC Top 100 Fund",
         code: "HDFTOP100",
         category: "Large Cap",
+        description: "A large-cap fund focusing on India's top 100 companies by market capitalization",
         nav: 823.45,
         aum: "21,456 Cr",
         expense: 1.65,
         returns: {
-          oneYear: 12.5,
-          threeYear: 15.2,
-          fiveYear: 11.8
+          "1y": 12.5,
+          "3y": 15.2,
+          "5y": 11.8
         },
-        riskLevel: "Moderate",
-        minimumInvestment: 5000,
+        risk: "Moderate",
+        minInvestment: 5000,
         fundManager: "Prashant Jain",
-        rating: 4
+        rating: 4,
+        type: "Equity Large Cap"
       },
       {
         name: "Axis Bluechip Fund",

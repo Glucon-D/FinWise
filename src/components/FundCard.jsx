@@ -3,7 +3,18 @@ import { FiTrendingUp, FiBarChart2, FiInfo } from 'react-icons/fi'
 import { formatCurrency, formatPercentage } from '../utils/formatters'
 
 export default function FundCard({ fund, onExplain }) {
-  const { name, description, risk, nav, returns, minInvestment, category, type } = fund
+  const { 
+    name, 
+    description = "A mutual fund investment option", // Default description
+    risk = fund.riskLevel, // Fallback to riskLevel if risk not present
+    nav, 
+    returns = {}, 
+    minInvestment = fund.minimumInvestment, // Fallback to minimumInvestment
+    category,
+    type,
+    aum,
+    expense
+  } = fund
 
   return (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
@@ -47,18 +58,35 @@ export default function FundCard({ fund, onExplain }) {
           )}
         </div>
         
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <FiInfo className="text-gray-400" />
+            <span>AUM: {aum}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <FiInfo className="text-gray-400" />
+            <span>Expense: {expense}%</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg mb-4">
           <div className="text-center">
             <p className="text-xs text-gray-500 mb-1">1Y Returns</p>
-            <p className="font-semibold text-emerald-600">{formatPercentage(returns['1y'])}</p>
+            <p className="font-semibold text-emerald-600">
+              {formatPercentage(returns['1y'] || returns.oneYear || 0)}
+            </p>
           </div>
           <div className="text-center border-x border-gray-200">
             <p className="text-xs text-gray-500 mb-1">3Y Returns</p>
-            <p className="font-semibold text-emerald-600">{formatPercentage(returns['3y'])}</p>
+            <p className="font-semibold text-emerald-600">
+              {formatPercentage(returns['3y'] || returns.threeYear || 0)}
+            </p>
           </div>
           <div className="text-center">
             <p className="text-xs text-gray-500 mb-1">5Y Returns</p>
-            <p className="font-semibold text-emerald-600">{formatPercentage(returns['5y'])}</p>
+            <p className="font-semibold text-emerald-600">
+              {formatPercentage(returns['5y'] || returns.fiveYear || 0)}
+            </p>
           </div>
         </div>
 

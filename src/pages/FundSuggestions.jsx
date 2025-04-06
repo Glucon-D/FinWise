@@ -7,6 +7,8 @@ import { FiAlertCircle, FiLoader, FiInfo, FiX } from "react-icons/fi";
 import { BiRupee } from "react-icons/bi";
 import { formatToRupees } from "../utils/formatters";
 import { explainLike18 } from "../services/gemini";
+import { fetchGoldPrice } from "../services/goldService";
+import GoldCard from "../components/GoldCard";
 
 export default function FundSuggestions() {
   const { profile, loading } = useProfile();
@@ -15,6 +17,7 @@ export default function FundSuggestions() {
   const [explanation, setExplanation] = useState("");
   const [explainedTerm, setExplainedTerm] = useState("");
   const [explainLoading, setExplainLoading] = useState(false);
+  const [goldData, setGoldData] = useState(null);
 
   const handleExplain = async (term) => {
     setExplainLoading(true);
@@ -116,6 +119,22 @@ export default function FundSuggestions() {
     }
   }, [profile]);
 
+  useEffect(() => {
+    const fetchGoldData = async () => {
+      try {
+        const data = await fetchGoldPrice();
+        setGoldData(data);
+      } catch (error) {
+        console.error("Error fetching gold data:", error);
+      }
+    };
+
+    fetchGoldData();
+    // Refresh gold price every 5 minutes
+    const interval = setInterval(fetchGoldData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -181,6 +200,7 @@ export default function FundSuggestions() {
 
       <div className="grid lg:grid-cols-3 gap-8 mb-8">
         <div className="lg:col-span-2 space-y-6">
+          <GoldCard goldData={goldData} onExplain={handleExplain} />
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               AI-Recommended Funds
