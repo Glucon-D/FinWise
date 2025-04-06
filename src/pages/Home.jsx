@@ -844,7 +844,9 @@ export default function Home() {
               Create Free Account
             </Link>
             <Link
-              to="/demo"
+              to="https://youtu.be/tiRlJXs138E"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all"
               style={{
                 padding:
