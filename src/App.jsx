@@ -21,13 +21,6 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-20 focus:right-4 focus:bg-emerald-500 focus:text-white focus:px-6 focus:py-2 focus:rounded-lg focus:shadow-lg focus:z-[100] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all"
-      >
-        Skip to main content
-      </a>
-
       <div className="fixed top-0 w-full z-50">
         <Navbar />
       </div>
@@ -36,7 +29,6 @@ function App() {
         <div className="flex flex-grow">
           {showSidebar && <Sidebar />}
           <main
-            id="main-content"
             className={`flex-grow px-4 py-8 ${showSidebar ? "lg:pl-72" : ""}`}
             role="main"
             aria-live="polite"

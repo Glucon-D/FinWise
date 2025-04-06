@@ -76,7 +76,7 @@ export default function Navbar() {
               </motion.div>
 
               <motion.span
-                className="text-xl text-gray-800"
+                className="text-2xl font-bold text-gray-800"
                 initial={{ x: -15, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}

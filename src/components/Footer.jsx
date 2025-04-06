@@ -6,16 +6,21 @@ function Footer() {
     <footer className="bg-white p-2 sm:p-4">
       <div className="max-w-6xl mx-auto w-full flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 bg-blur-3xl backdrop-blur-3xl rounded-lg px-3 sm:px-4 py-3 sm:py-4">
         {/* Logo Section */}
-        <a href="https://github.com/Glucon-D/FinWise" 
-           className="transition-transform duration-200 text-center sm:text-left"
-        >
-          <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-            FinWise
-            <p className="text-[10px] sm:text-xs md:text-sm font-light text-gray-600">
-              Made with ❤️ by Team Glucon D
-            </p>
-          </span>
-        </a>
+        <div className="flex flex-col gap-1">
+          <a href="https://github.com/Glucon-D/FinWise" 
+             className="transition-transform duration-200 text-center sm:text-left"
+          >
+            <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
+              FinWise
+              <p className="text-[10px] sm:text-xs md:text-sm font-light text-gray-600">
+                Made with ❤️ by Team Glucon D
+              </p>
+            </span>
+          </a>
+          <p className="text-[10px] sm:text-xs text-gray-500 max-w-xs">
+            FinWise offers AI-based insights. Not investment advice.
+          </p>
+        </div>
 
         {/* Links Section */}
         <div className="flex items-center gap-3 sm:gap-4 md:gap-6"> 

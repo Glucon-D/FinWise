@@ -183,3 +183,69 @@ Below is the conversation so far:
     };
   }
 }
+
+/**
+ * Generates an in-depth explanation of a blog topic (title + summary)
+ * @param {string} title - Blog title
+ * @param {string} summary - Blog summary
+ * @returns {Promise<{success: boolean, explanation: string}>}
+ */
+export async function blogBrainExplain(title, summary) {
+  try {
+    const prompt = `
+You are **FinWise AI 🧠**, a friendly and expert financial guide built for beginners in India.
+
+Your task is to write a blog-style explanation in **Markdown format** for the following blog:
+
+---
+📌 **Title**: "${title}"  
+📝 **Summary**: "${summary}"
+---
+
+### ✅ Formatting Instructions:
+
+Write a **detailed, beginner-friendly blog** post that explains the topic simply, step-by-step. Use the following format:
+
+---
+
+## 🧩 Introduction  
+Start by explaining what the topic is and why it's important.
+
+## 🔍 Simple Explanation  
+Break the topic down into 3–5 short paragraphs using everyday language. If any questions are naturally asked in the explanation, **bold them**.
+
+## 🧠 Real-Life Analogy  
+Use an easy-to-understand example or analogy — something relatable like shopping, cooking, school, etc.
+
+## ✨ Quick Tips to Remember  
+Use bullet points to highlight 3–5 things a beginner should take away.
+
+---
+
+### ✨ Additional Instructions:
+
+- Your response should be **at least 15-18 full sentences**
+- Do **not** use financial jargon unless you explain it simply
+- Do **not** say "As an AI..." or mention being an assistant
+- Keep your tone warm, motivating, and easy-going — like teaching a friend
+- Use **line breaks** between paragraphs and lists for better readability
+- Output **only the blog** in Markdown (no extra commentary)
+
+🧠 Begin your full blog response now:
+`;
+
+    const result = await model.generateContent(prompt);
+    const explanation = result.response.text();
+
+    return {
+      success: true,
+      explanation: explanation.trim(),
+    };
+  } catch (error) {
+    console.error("Error in blogBrainExplain:", error);
+    return {
+      success: false,
+      explanation: `Sorry, I couldn't explain "${title}" right now.`,
+    };
+  }
+}
