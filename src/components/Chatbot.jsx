@@ -9,7 +9,7 @@ export default function Chatbot() {
   const [chatHistory, setChatHistory] = useState([
     {
       role: "bot",
-      text: "Hi there! 👋 I'm FunWise AI, your friendly assistant. Ask me anything related to investing, SIPs, mutual funds, or financial planning! 💸",
+      text: "Hi there! 👋 I'm FinWise AI, your friendly assistant. Ask me anything related to investing, SIPs, mutual funds, or financial planning! 💸",
     },
   ]);
   const [input, setInput] = useState("");
@@ -78,7 +78,7 @@ export default function Chatbot() {
         ))}
 
         {isThinking && (
-          <p className="text-xs text-gray-400">FunWise AI is typing...</p>
+          <p className="text-xs text-gray-400">FinWise AI is typing...</p>
         )}
         <div ref={messagesEndRef} />
       </div>

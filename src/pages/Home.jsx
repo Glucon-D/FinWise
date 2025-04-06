@@ -674,24 +674,24 @@ export default function Home() {
         <div className="space-y-3 sm:space-y-5 max-w-xl md:max-w-4xl mx-auto px-2 sm:px-0">
           {[
             {
-              question: "What is FunWise?",
+              question: "What is FinWise?",
               answer:
-                "FunWise is a smart, AI-powered platform that helps you choose the right investment options based on your age, goals, capital, and risk profile — all in a beginner-friendly and educational way.",
+                "FinWise is a smart, AI-powered platform that helps you choose the right investment options based on your age, goals, capital, and risk profile — all in a beginner-friendly and educational way.",
             },
             {
               question: "Is this a real investment platform?",
               answer:
-                "No. FunWise is not a broker or a financial transaction platform. It's an educational and guidance tool that helps you understand what kind of investments may suit you.",
+                "No. FinWise is not a broker or a financial transaction platform. It's an educational and guidance tool that helps you understand what kind of investments may suit you.",
             },
             {
-              question: "Do I need any financial knowledge to use FunWise?",
+              question: "Do I need any financial knowledge to use FinWise?",
               answer:
-                'Not at all! FunWise is designed for complete beginners. It explains everything in simple terms, and even has a mode called "Explain Like I\'m 18" for ultra-clear explanations.',
+                'Not at all! FinWise is designed for complete beginners. It explains everything in simple terms, and even has a mode called "Explain Like I\'m 18" for ultra-clear explanations.',
             },
             {
-              question: "How does FunWise give suggestions?",
+              question: "How does FinWise give suggestions?",
               answer:
-                "FunWise uses AI (Gemini) to understand your profile (like age, goal, capital, etc.) and gives you personalized investment suggestions like SIPs, mutual funds, or gold — based on your risk category.",
+                "FinWise uses AI (Gemini) to understand your profile (like age, goal, capital, etc.) and gives you personalized investment suggestions like SIPs, mutual funds, or gold — based on your risk category.",
             },
             {
               question: "Is my data safe?",
@@ -699,17 +699,17 @@ export default function Home() {
                 "Yes. We only collect basic profile info like age, capital, and goals. We don't store any sensitive or financial data, and everything stays private and secure.",
             },
             {
-              question: "Do I need to pay to use FunWise?",
+              question: "Do I need to pay to use FinWise?",
               answer:
-                "Nope! FunWise MVP is completely free to use. It's designed for learning and exploring how to invest smartly.",
+                "Nope! FinWise MVP is completely free to use. It's designed for learning and exploring how to invest smartly.",
             },
             {
-              question: "Does FunWise tell me exactly where to invest?",
+              question: "Does FinWise tell me exactly where to invest?",
               answer:
-                "FunWise gives AI-based suggestions, not fixed advice. You still make your own decisions — we just help you understand your options better.",
+                "FinWise gives AI-based suggestions, not fixed advice. You still make your own decisions — we just help you understand your options better.",
             },
             {
-              question: "What's coming next on FunWise?",
+              question: "What's coming next on FinWise?",
               answer:
                 "In future updates, we'll add: \
                 \n• A smart portfolio simulator \

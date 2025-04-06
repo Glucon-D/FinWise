@@ -12,7 +12,7 @@ export default function ChatWidget() {
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-[90vw] sm:w-[400px] h-[70vh] bg-white border rounded-xl shadow-2xl z-50 flex flex-col">
           <div className="flex items-center justify-between p-4 bg-emerald-500 text-white rounded-t-xl">
-            <h4 className="font-semibold">💬 FunWise AI – AI Chat Assistant</h4>
+            <h4 className="font-semibold">💬 FinWise AI – AI Chat Assistant</h4>
             <FiX
               className="cursor-pointer hover:text-gray-200"
               onClick={() => setIsOpen(false)}
