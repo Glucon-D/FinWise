@@ -1,7 +1,7 @@
-import { FiClock } from 'react-icons/fi';
-import { formatCurrency } from '../utils/formatters';
-import FundCard from './FundCard';
-import { goldFunds } from '../data/goldFunds';
+import { FiClock } from "react-icons/fi";
+import { formatCurrency } from "../utils/formatters";
+import FundCard from "./FundCard";
+import { goldFunds } from "../data/goldFunds";
 
 export default function GoldCard({ goldData, onExplain }) {
   if (!goldData) return null;
@@ -11,7 +11,9 @@ export default function GoldCard({ goldData, onExplain }) {
       <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-800">Live Gold Price (24K)</span>
+            <span className="font-medium text-gray-800">
+              Live Gold Price (22K)
+            </span>
             {goldData.isCache && (
               <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
                 Cached
@@ -40,12 +42,8 @@ export default function GoldCard({ goldData, onExplain }) {
           </button>
         </h3>
         <div className="grid gap-4">
-          {goldFunds.map(fund => (
-            <FundCard 
-              key={fund.code}
-              fund={fund}
-              onExplain={onExplain}
-            />
+          {goldFunds.map((fund) => (
+            <FundCard key={fund.code} fund={fund} onExplain={onExplain} />
           ))}
         </div>
       </div>
