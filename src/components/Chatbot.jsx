@@ -3,45 +3,57 @@ import { motion } from "framer-motion";
 import { FiSend } from "react-icons/fi";
 import { investmentChatBot } from "../services/gemini";
 import ReactMarkdown from "react-markdown";
+import { useChatbot } from "../context/ChatBotContext";
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState([
+  const [chatHistory, setChatHistory] = useState([
     {
       role: "bot",
       text: "Hi there! 👋 I'm FunWise AI, your friendly assistant. Ask me anything related to investing, SIPs, mutual funds, or financial planning! 💸",
     },
   ]);
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const { initialMessage, setInitialMessage } = useChatbot();
+  const hasHandledInitial = useRef(false);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatHistory]);
+
+  useEffect(() => {
+    if (initialMessage && !hasHandledInitial.current) {
+      const newMessage = { role: "user", text: initialMessage };
+      setChatHistory((prev) => [...prev, newMessage]);
+      sendToGemini([...chatHistory, newMessage]);
+      hasHandledInitial.current = true;
+      setInitialMessage("");
+    }
+  }, [initialMessage]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userMessage = input.trim();
-    setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
-    setInput("");
-    setIsTyping(true);
-
-    const response = await investmentChatBot([
-      ...messages,
-      { role: "user", text: userMessage },
-    ]);
-
+  const sendToGemini = async (history) => {
+    setIsThinking(true);
+    const response = await investmentChatBot(history);
     const botReply = response.success
       ? response.reply
       : "Sorry, I'm having trouble answering that right now.";
 
-    setMessages((prev) => [...prev, { role: "bot", text: botReply }]);
-    setIsTyping(false);
+    setChatHistory((prev) => [...prev, { role: "bot", text: botReply }]);
+    setIsThinking(false);
+  };
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    const userMessage = input.trim();
+    setChatHistory((prev) => [...prev, { role: "user", text: userMessage }]);
+    setInput("");
+    await sendToGemini([...chatHistory, { role: "user", text: userMessage }]);
   };
 
   const handleKeyPress = (e) => {
@@ -51,7 +63,7 @@ export default function Chatbot() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg, idx) => (
+        {chatHistory.map((msg, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 10 }}
@@ -65,7 +77,7 @@ export default function Chatbot() {
           </motion.div>
         ))}
 
-        {isTyping && (
+        {isThinking && (
           <p className="text-xs text-gray-400">FunWise AI is typing...</p>
         )}
         <div ref={messagesEndRef} />
