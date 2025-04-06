@@ -18,7 +18,9 @@ export const mutualFunds = {
         minInvestment: 5000,
         fundManager: "Prashant Jain",
         rating: 4,
-        type: "Equity Large Cap"
+        type: "Equity Large Cap",
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Axis Bluechip Fund",
@@ -35,7 +37,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Shreyash Devalkar",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Mirae Asset Large Cap Fund",
@@ -52,7 +56,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Neelesh Surana",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "SBI Blue Chip Fund",
@@ -69,7 +75,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Sohini Andani",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     midCap: [
@@ -88,7 +96,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "R. Srinivasan",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Kotak Emerging Equity Fund",
@@ -105,7 +115,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "Pankaj Tibrewal",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Axis Midcap Fund",
@@ -122,7 +134,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "Shreyash Devalkar",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       }
     ],
     smallCap: [
@@ -141,7 +155,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 1000,
         fundManager: "Samir Rachh",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Axis Small Cap Fund",
@@ -158,7 +174,9 @@ export const mutualFunds = {
         riskLevel: "Very High",
         minimumInvestment: 5000,
         fundManager: "Anupam Tiwari",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       }
     ],
     sectoral: [
@@ -177,7 +195,9 @@ export const mutualFunds = {
         riskLevel: "Very High",
         minimumInvestment: 5000,
         fundManager: "Vaibhav Shah",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "SBI Healthcare Opportunities Fund",
@@ -194,7 +214,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "Tanmaya Desai",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Nippon India Pharma Fund",
@@ -211,7 +233,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "Sailesh Bhan",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     international: [
@@ -230,7 +254,9 @@ export const mutualFunds = {
         riskLevel: "High",
         minimumInvestment: 5000,
         fundManager: "Avinash Satwalekar",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Edelweiss Greater China Equity Off-shore Fund",
@@ -247,7 +273,9 @@ export const mutualFunds = {
         riskLevel: "Very High",
         minimumInvestment: 5000,
         fundManager: "Fund Manager",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ]
   },
@@ -268,7 +296,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Manish Banthia",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Aditya Birla Sun Life Short Term Fund",
@@ -285,7 +315,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 1000,
         fundManager: "Kaustubh Gupta",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     gilt: [
@@ -304,7 +336,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Dinesh Ahuja",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "HDFC Gilt Fund",
@@ -321,7 +355,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Shobhit Mehrotra",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     corporate: [
@@ -340,7 +376,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Deepak Agrawal",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "ICICI Prudential Corporate Bond Fund",
@@ -357,7 +395,9 @@ export const mutualFunds = {
         riskLevel: "Low",
         minimumInvestment: 5000,
         fundManager: "Manish Banthia",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ]
   },
@@ -378,7 +418,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Harsha Upadhyaya",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "HDFC Balanced Advantage Fund",
@@ -395,7 +437,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Prashant Jain",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     aggressive: [
@@ -414,7 +458,9 @@ export const mutualFunds = {
         riskLevel: "Moderately High",
         minimumInvestment: 1000,
         fundManager: "Sahil Kapoor",
-        rating: 3
+        rating: 3,
+        popularity: 1500,
+        trending: true
       }
     ],
     dynamic: [
@@ -433,7 +479,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Sankaran Naren",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "SBI Dynamic Asset Allocation Fund",
@@ -450,7 +498,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Dinesh Ahuja",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ]
   },
@@ -471,7 +521,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Index Fund",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "HDFC Index Fund - NIFTY 50 Plan",
@@ -488,7 +540,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Index Fund",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     sensex: [
@@ -507,7 +561,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Index Fund",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ]
   },
@@ -528,7 +584,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 1000,
         fundManager: "Ravindra Prasad",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Nippon India Gold ETF",
@@ -545,7 +603,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 1000,
         fundManager: "Mehul Dama",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ],
     goldFoF: [
@@ -564,7 +624,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 5000,
         fundManager: "Deepak Gupta",
-        rating: 4
+        rating: 4,
+        popularity: 1500,
+        trending: true
       }
     ]
   },
@@ -585,7 +647,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 500,
         fundManager: "Jinesh Gopani",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       },
       {
         name: "Mirae Asset Tax Saver Fund",
@@ -602,7 +666,9 @@ export const mutualFunds = {
         riskLevel: "Moderate",
         minimumInvestment: 500,
         fundManager: "Neelesh Surana",
-        rating: 5
+        rating: 5,
+        popularity: 1500,
+        trending: true
       }
     ]
   }
