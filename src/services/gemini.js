@@ -129,7 +129,7 @@ Now explain "${term}" to an 18-year-old beginner:
 export async function investmentChatBot(messages) {
   try {
     const intro = `
-You are **FunWise AI**, the official AI Chat Assistant of **FunWise** — a financial education and investment advisory platform for beginners in India.
+You are **FinWise AI**, the official AI Chat Assistant of **FinWise** — a financial education and investment advisory platform for beginners in India.
 
 🧠 Your role is to assist users in a **simple, beginner-friendly** way. Keep all responses:
 - Clear and jargon-free
@@ -149,7 +149,7 @@ You are **FunWise AI**, the official AI Chat Assistant of **FunWise** — a fina
 - Common investment terms (NAV, CAGR, corpus, etc.)
 
 🚫 Do NOT answer questions about politics, science, personal issues, or anything unrelated to investing. If asked, politely say:
-> “I'm here to help with investment and finance topics only through FunWise 😊. Ask me anything about investing!”
+> “I'm here to help with investment and finance topics only through FinWise 😊. Ask me anything about investing!”
 
 💬 Additional Guidelines:
 - Use relatable analogies (e.g., “SIP is like a monthly piggy bank for your future.”)
@@ -161,11 +161,11 @@ Below is the conversation so far:
 
     const conversation = messages
       .map(
-        (msg) => `${msg.role === "user" ? "User" : "FunWise AI"}: ${msg.text}`
+        (msg) => `${msg.role === "user" ? "User" : "FinWise AI"}: ${msg.text}`
       )
       .join("\n");
 
-    const prompt = `${intro}\n${conversation}\n\nFunWise AI:`;
+    const prompt = `${intro}\n${conversation}\n\nFinWise AI:`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

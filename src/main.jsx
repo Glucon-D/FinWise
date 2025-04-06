@@ -20,6 +20,8 @@ import EMICalculator from "./components/EMICalculator";
 import SWPCalculator from "./components/SWPCalculator";
 import MFCalculator from "./components/MFCalculator";
 import { Outlet } from "react-router-dom";
+import BlogsSection from "./components/BlogSection";
+import { ChatbotProvider } from "./context/ChatBotContext";
 
 const router = createBrowserRouter([
   {
@@ -110,6 +112,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/blog",
+        element: (
+          <ProtectedRoute>
+            <BlogsSection />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
@@ -118,7 +128,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ProfileProvider>
-        <RouterProvider router={router} />
+        <ChatbotProvider>
+          <RouterProvider router={router} />
+        </ChatbotProvider>
       </ProfileProvider>
     </AuthProvider>
   </StrictMode>
