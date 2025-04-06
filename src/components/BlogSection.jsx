@@ -10,9 +10,11 @@ import {
   FiTrendingUp,
   FiFilter,
 } from "react-icons/fi";
-import { explainLike18 } from "../services/gemini";
+import { blogBrainExplain } from "../services/gemini";
 import { financeBlogs } from "../data/financeBlogs";
 import { useChatbot } from "../context/ChatBotContext";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // Optional: supports GitHub Flavored Markdown
 
 export default function BlogsSection() {
   const [search, setSearch] = useState("");
@@ -45,14 +47,14 @@ export default function BlogsSection() {
     setExplanation("");
 
     try {
-      const result = await explainLike18(blog.title);
+      const result = await blogBrainExplain(blog.title, blog.summary); // use new function
       setExplanation(
         result.success
           ? result.explanation
           : `Sorry, I couldn't explain "${blog.title}" right now.`
       );
     } catch (error) {
-      console.error("Explanation error:", error);
+      console.error("Brain explanation error:", error);
       setExplanation(`Sorry, I couldn't explain "${blog.title}" right now.`);
     } finally {
       setExplainLoading(false);
@@ -67,59 +69,20 @@ export default function BlogsSection() {
 
   return (
     <section className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        className="text-center mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <motion.h2
+        className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-          Financial Knowledge Hub
-        </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Expand your financial literacy with our curated collection of expert
-          insights and beginner-friendly guides.
-        </p>
-      </motion.div>
-
-      {featuredBlog && (
-        <motion.div
-          className="mb-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl text-white overflow-hidden shadow-xl"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="p-8 sm:p-10 backdrop-blur-sm bg-black/10">
-            <div className="flex items-center gap-2 mb-4 text-emerald-100">
-              <FiTrendingUp />
-              <span className="text-sm font-medium">Featured Article</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold mb-4">
-              {featuredBlog.title}
-            </h3>
-            <p className="text-emerald-50 mb-6 max-w-3xl">
-              {featuredBlog.summary}
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-emerald-100">
-                <FiClock />
-                <span>{featuredBlog.readingTime || "5 min read"}</span>
-              </div>
-              <button
-                onClick={() => handleExplain(featuredBlog)}
-                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                🧠 Explain This Topic
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      )}
+        Finance Blogs for Beginners
+      </motion.h2>
 
       <div className="max-w-md mx-auto mb-10">
         <input
           type="text"
-          placeholder="Search articles by topic..." // Updated placeholder
+          placeholder="Search articles by topic or tags..." // Updated placeholder
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm"
@@ -148,7 +111,7 @@ export default function BlogsSection() {
                       key={idx}
                       className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
                     >
-                      {tag.replace(/^#/, '')} {/* Remove hash from tags */}
+                      {tag.replace(/^#/, "")} {/* Remove hash from tags */}
                     </span>
                   ))}
                 </div>
@@ -157,7 +120,7 @@ export default function BlogsSection() {
               <div className="flex items-center justify-between gap-2 mt-auto pt-4 border-t border-gray-100">
                 <button
                   onClick={() => handleExplain(blog)}
-                  className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
+                  className="text-xs text-black bg-gray-100 cursor-pointer hover:bg-gray-200 px-4 py-2 rounded-lg"
                 >
                   🧠 Brain
                 </button>
@@ -168,7 +131,7 @@ export default function BlogsSection() {
                       `Hi FinWise, I was reading "${blog.title}" and here's the summary:\n"${blog.summary}". Can you explain it further?`
                     )
                   }
-                  className="text-xs text-white bg-emerald-500 hover:bg-emerald-400 px-4 py-2 rounded-lg"
+                  className="text-xs text-white bg-emerald-500 cursor-pointer hover:bg-emerald-400 px-4 py-2 rounded-lg"
                 >
                   🤖 Ask FinWise AI
                 </button>
@@ -179,46 +142,57 @@ export default function BlogsSection() {
       </AnimatePresence>
 
       {filteredBlogs.length === 0 && (
-        <p className="text-center text-gray-500 mt-6">No blogs match that tag.</p>
+        <p className="text-center text-gray-500 mt-6">
+          No blogs match that tag.
+        </p>
       )}
 
       {explainedTerm && (
-        <div className="fixed inset-0 backdrop-blur-xl flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
-            <button
-              onClick={() => {
-                setExplainedTerm("");
-                setExplanation("");
-              }}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-            >
-              <FiX className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-emerald-100 text-emerald-600 p-2 rounded-full">
-                <FiInfo className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md px-4 sm:px-0">
+          <div className="relative w-full max-w-3xl max-h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex items-center gap-2">
+                <div className="bg-emerald-100 text-emerald-600 p-2 rounded-full">
+                  <FiInfo className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
+                  Understanding: {explainedTerm}
+                </h3>
               </div>
-              <h3 className="text-lg font-medium text-gray-800">
-                Understanding: {explainedTerm}
-              </h3>
-            </div>
-            {explainLoading ? (
-              <div className="text-center py-6">
-                <FiLoader className="w-6 h-6 text-emerald-500 mx-auto mb-2 animate-spin" />
-                <p className="text-gray-500">Getting explanation...</p>
-              </div>
-            ) : (
-              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {explanation}
-              </div>
-            )}
-            <div className="mt-6 text-right">
               <button
                 onClick={() => {
                   setExplainedTerm("");
                   setExplanation("");
                 }}
-                className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400"
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scrollable Markdown Content */}
+            <div className="overflow-y-auto px-5 py-4 flex-1 text-sm sm:text-base text-gray-700 leading-relaxed prose prose-sm sm:prose-base max-w-none">
+              {explainLoading ? (
+                <div className="text-center py-6">
+                  <FiLoader className="w-6 h-6 text-emerald-500 mx-auto mb-2 animate-spin" />
+                  <p className="text-gray-500">Getting explanation...</p>
+                </div>
+              ) : (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {explanation}
+                </ReactMarkdown>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t px-5 py-4 text-right">
+              <button
+                onClick={() => {
+                  setExplainedTerm("");
+                  setExplanation("");
+                }}
+                className="px-4 py-2 text-sm sm:text-base bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition"
               >
                 Got it!
               </button>
